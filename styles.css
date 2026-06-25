@@ -105,6 +105,29 @@ img{max-width:100%;display:block}
 .nav-link{font-size:.92rem; color:var(--ink-2); text-decoration:none; padding:.5rem .2rem}
 .nav-link:hover{color:var(--ink)}
 @media (max-width:680px){ .nav-link.collapse{display:none} }
+.lang{display:inline-flex; border:1px solid var(--line-2); border-radius:999px; overflow:hidden}
+.lang button{font:600 .76rem/1 var(--mono); letter-spacing:.04em; color:var(--ink-3);
+  background:transparent; border:none; padding:.45em .7em; cursor:pointer; transition:.12s}
+.lang button.active{background:var(--accent); color:var(--accent-ink)}
+
+/* domains (목업) */
+.domain-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:.7rem}
+.domain-chip{display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+  padding:.85em 1em; border:1px solid var(--line); border-radius:var(--r-md); background:var(--surface);
+  font-size:.92rem; font-weight:600; color:var(--ink); cursor:pointer; transition:.14s}
+.domain-chip:hover{border-color:var(--accent); transform:translateY(-1px)}
+.domain-chip.soon{color:var(--ink-3); cursor:default; background:transparent}
+.domain-chip.soon:hover{border-color:var(--line); transform:none}
+.domain-chip .soon-tag{font:600 .64rem/1 var(--mono); letter-spacing:.08em; color:var(--amber);
+  border:1px solid var(--line-2); border-radius:999px; padding:.35em .55em}
+.domain-chip.active-now .soon-tag{color:var(--accent); border-color:var(--accent)}
+
+/* free limit */
+.limit-box{display:none; margin-top:1.4rem; padding:clamp(18px,3vw,24px); border-radius:var(--r-md);
+  border:1px solid var(--accent); background:var(--accent-soft); text-align:center}
+.limit-box.show{display:block; animation:rise .35s ease}
+.limit-box h3{margin:0 0 .5rem; font-size:1.15rem; font-weight:740; letter-spacing:-.02em; color:var(--ink)}
+.limit-box p{margin:0 0 1.2rem; color:var(--ink-2); font-size:.95rem}
 
 /* ── hero (asymmetric split) ────────────────────────────────── */
 .hero{padding:clamp(3rem,8vw,6rem) 0 clamp(2.5rem,6vw,4.5rem)}

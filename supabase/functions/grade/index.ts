@@ -1,7 +1,8 @@
 // grade — 답변 즉시 채점 Edge Function (Gemini)
 // 텔레그램 eb_feedback.py 의 _SYS 루브릭·프롬프트·?key= 인증·키 폴백·JSON 파싱을 미러링.
-// 시크릿(키·모델·루브릭)은 소스/프론트에 없음 → 비공개 app_secrets 테이블에서 service_role 로만 읽는다.
-// verify_jwt=true → 로그인 사용자만 호출(데모/익명은 게이트에서 막혀 앱이 mock 으로 폴백).
+// 시크릿(키·모델·루브릭·텔레그램토큰)은 소스/프론트에 없음 → 비공개 app_secrets 에서 service_role 로만 읽음.
+// verify_jwt=true → 로그인/익명 사용자만 호출. 익명(이름만)은 3회까지 무료 실채점(서버측 제한).
+// 채점 후 오너 텔레그램(COT봇)으로 [질문+답변+점수+이름] 알림.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const CORS = {
@@ -12,20 +13,33 @@ const CORS = {
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
+const FREE_LIMIT = 3; // 익명(이름만) 사용자 무료 실채점 횟수
+
 async function loadSecrets() {
   const url = Deno.env.get("SUPABASE_URL");
   const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const r = await fetch(
-    `${url}/rest/v1/app_secrets?select=key,value&key=in.(gemini_keys,gemini_model,grade_sys)`,
-    { headers: { apikey: svc, Authorization: `Bearer ${svc}` } },
-  );
+  const keys = "gemini_keys,gemini_model,grade_sys,telegram_notify_token,telegram_owner_chat";
+  const r = await fetch(`${url}/rest/v1/app_secrets?select=key,value&key=in.(${keys})`,
+    { headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
   const rows = await r.json();
-  const map = Object.fromEntries(rows.map((x) => [x.key, x.value]));
+  const m = Object.fromEntries(rows.map((x) => [x.key, x.value]));
   return {
-    keys: (map["gemini_keys"] || "").split(",").map((k) => k.trim()).filter(Boolean),
-    model: map["gemini_model"] || "gemini-flash-latest",
-    sys: map["grade_sys"] || "",
+    url, svc,
+    keys: (m["gemini_keys"] || "").split(",").map((k) => k.trim()).filter(Boolean),
+    model: m["gemini_model"] || "gemini-flash-latest",
+    sys: m["grade_sys"] || "",
+    tgToken: m["telegram_notify_token"] || "",
+    tgChat: m["telegram_owner_chat"] || "",
   };
+}
+
+async function gradedCount(url, svc, uid) {
+  // 이 사용자가 이미 '채점까지 끝낸'(feedback 있는) 기여 수
+  const r = await fetch(
+    `${url}/rest/v1/contributions?select=id&user_id=eq.${uid}&feedback=not.is.null`,
+    { headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
+  const rows = await r.json().catch(() => []);
+  return Array.isArray(rows) ? rows.length : 0;
 }
 
 function parseScore(raw) {
@@ -54,15 +68,37 @@ function extract(data) {
   return parts.filter((p) => "text" in p).map((p) => p.text).join("").trim();
 }
 
+function cut(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, n) + "…" : s; }
+
+async function notifyTelegram(s, info) {
+  if (!s.tgToken || !s.tgChat) return;
+  const tag = info.anon ? " (익명·무료)" : " (로그인)";
+  const text =
+    `🌐 웹 기여 — ${info.name || "이름없음"}${tag}\n` +
+    `🏷️ ${cut(info.domain, 60)}\n\n` +
+    `❓ ${cut(info.question, 200)}\n\n` +
+    `✍️ ${cut(info.answer, 600)}\n\n` +
+    `📊 타당성 ${info.v} · 돌파력 ${info.g}\n` +
+    `🎯 ${cut(info.critique, 300)}`;
+  try {
+    await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: s.tgChat, text, disable_web_page_preview: true }),
+    });
+  } catch { /* 알림 실패는 채점에 영향 없음 */ }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method" }, 405);
 
-  // 로그인 사용자만(익명/데모 차단) — 무료 Gemini 쿼터 남용 방지.
+  // 로그인/익명 사용자만(비인증 차단)
+  let claims;
   try {
     const auth = req.headers.get("Authorization") || "";
-    const payload = JSON.parse(atob(auth.replace("Bearer ", "").split(".")[1] || ""));
-    if (payload.role !== "authenticated") return json({ error: "login_required" }, 401);
+    claims = JSON.parse(atob(auth.replace("Bearer ", "").split(".")[1] || ""));
+    if (claims.role !== "authenticated") return json({ error: "login_required" }, 401);
   } catch { return json({ error: "login_required" }, 401); }
 
   let body;
@@ -70,20 +106,37 @@ Deno.serve(async (req) => {
   const dilemma = String(body.dilemma || "").slice(0, 4000);
   const question = String(body.prompt || body.question || "").slice(0, 2000);
   const answer = String(body.answer || "").slice(0, 6000);
+  const domain = String(body.domain || "").slice(0, 200);
   if (!question || !answer) return json({ error: "missing" }, 400);
 
-  const { keys, model, sys } = await loadSecrets();
-  if (!keys.length || !sys) return json({ error: "not_configured" }, 500);
+  const s = await loadSecrets();
+  if (!s.keys.length || !s.sys) return json({ error: "not_configured" }, 500);
+
+  const isAnon = claims.is_anonymous === true;
+  const uid = claims.sub;
+  const name = claims.user_metadata?.name || (claims.email ? claims.email.split("@")[0] : "");
+
+  // 익명(이름만) 사용자 무료 3회 제한 — 초과 시 로그인 유도
+  if (isAnon) {
+    const used = await gradedCount(s.url, s.svc, uid);
+    if (used >= FREE_LIMIT) return json({ error: "free_limit", limit: FREE_LIMIT }, 403);
+  }
 
   const qtext = dilemma ? `[딜레마 상황]\n${dilemma}\n\n[질문]\n${question}` : question;
-  const prompt = `${sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}`;
+  const prompt = `${s.sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}`;
 
-  for (const key of keys) {
+  for (const key of s.keys) {
     let res;
-    try { res = await callGemini(model, key, prompt); } catch { continue; }
+    try { res = await callGemini(s.model, key, prompt); } catch { continue; }
     if (res.status === 200) {
       const parsed = parseScore(extract(res.data));
-      if (parsed) return json(parsed);
+      if (parsed) {
+        await notifyTelegram(s, {
+          name, anon: isAnon, domain, question, answer,
+          v: parsed.validity, g: parsed.ingenuity, critique: parsed.critique,
+        });
+        return json(parsed);
+      }
       continue;
     }
     continue;
