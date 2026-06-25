@@ -71,18 +71,26 @@ function extract(data) {
 function cut(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, n) + "…" : s; }
 function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
+// JWT payload 를 UTF-8 안전하게 디코드(atob 은 Latin1 → 한글 이름 깨짐. base64url + TextDecoder 사용).
+function jwtPayload(token) {
+  let b64 = (token.split(".")[1] || "").replace(/-/g, "+").replace(/_/g, "/");
+  b64 += "=".repeat((4 - (b64.length % 4)) % 4);
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  return JSON.parse(new TextDecoder("utf-8").decode(bytes));
+}
+
 async function notifyTelegram(s, info) {
   if (!s.tgToken || !s.tgChat) return;
   // HTML parse_mode + 안전 이모지(🌐만, 변형선택자 이모지 제외)로 클라이언트 호환성 확보. 딜레마 포함.
   const tag = info.anon ? "익명·무료" : "로그인";
   const text =
     `🌐 <b>웹 기여</b> — ${esc(info.name || "이름없음")} (${tag})\n\n` +
-    `<b>도메인</b>\n${esc(cut(info.domain, 80))}\n\n` +
-    `<b>딜레마</b>\n${esc(cut(info.dilemma, 500))}\n\n` +
-    `<b>질문</b>\n${esc(cut(info.question, 300))}\n\n` +
-    `<b>답변</b>\n${esc(cut(info.answer, 800))}\n\n` +
-    `<b>채점</b> 타당성 ${info.v} · 돌파력 ${info.g}\n` +
-    `<b>치명적 한계</b>\n${esc(cut(info.critique, 300))}`;
+    `📌 <b>도메인</b>\n${esc(cut(info.domain, 80))}\n\n` +
+    `🧩 <b>딜레마</b>\n${esc(cut(info.dilemma, 500))}\n\n` +
+    `❓ <b>질문</b>\n${esc(cut(info.question, 300))}\n\n` +
+    `📝 <b>답변</b>\n${esc(cut(info.answer, 800))}\n\n` +
+    `📊 <b>채점</b> 타당성 ${info.v} · 돌파력 ${info.g}\n` +
+    `🎯 <b>치명적 한계</b>\n${esc(cut(info.critique, 300))}`;
   try {
     const r = await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
       method: "POST",
@@ -109,7 +117,7 @@ Deno.serve(async (req) => {
   let claims;
   try {
     const auth = req.headers.get("Authorization") || "";
-    claims = JSON.parse(atob(auth.replace("Bearer ", "").split(".")[1] || ""));
+    claims = jwtPayload(auth.replace("Bearer ", ""));
     if (claims.role !== "authenticated") return json({ error: "login_required" }, 401);
   } catch { return json({ error: "login_required" }, 401); }
 
