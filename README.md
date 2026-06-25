@@ -6,6 +6,13 @@
 - **백엔드**: Supabase (Auth · DB · 추후 Edge Function 채점)
 - **디자인**: 라이트 에디토리얼, 포레스트그린 단일 액센트, 모바일 반응형, 다크모드 자동 대응
 
+## 현재 상태 (2026-06-25)
+- **라이브**: https://euichanlee0608-svg.github.io/engineering-brain/
+- 레포: `euichanlee0608-svg/engineering-brain` (public)
+- Supabase 프로젝트 `kjlknxwzpmdzawwrurva`(서울) 복구 완료 · `contributions`/`questions` 테이블+RLS 적용 · `config.js`에 공개키 입력됨 → **실연동 모드 ON**(questions DB서빙·답변 RLS저장 동작 검증됨).
+- **남은 수동 단계(대시보드)**: Authentication > URL Configuration 에서 **Site URL** 과 **Redirect URLs** 에 위 Pages 주소 추가 → 그래야 매직링크/구글 로그인이 사이트로 돌아온다. (구글 로그인 쓰려면 Providers에서 OAuth 클라이언트 등록도 필요. 매직링크는 Site URL만 설정하면 동작.)
+- 채점은 아직 mock(`LIVE_GRADING:false`) — 실채점 켜려면 `grade` Edge Function 추가.
+
 ## 모드 2가지
 `config.js` 가 비어있으면 **데모 모드**(로그인 없이 둘러보기/체험, 채점은 로컬 mock).
 값을 채우면 **실연동 모드**(실제 로그인 + 답변 DB 저장 + 질문 DB 서빙).
