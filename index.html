@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Engineering Brain — 융합공학 사고력 트레이닝</title>
+<meta name="description" content="기계공학과 AI가 만나는 지점의 난제를, 정답이 아니라 우회로로 푼다. 당신의 날것 사고를 채점받고 쌓아가는 공학 추론 짐.">
+<meta property="og:title" content="Engineering Brain">
+<meta property="og:description" content="융합공학 난제로 당신의 사고를 시험하라.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2315683f'/><text x='16' y='22' font-size='17' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>E</text></svg>">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- ══ LANDING ══════════════════════════════════════════════ -->
+<div id="landing">
+
+  <nav class="nav" id="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top"><span class="mark">E</span> Engineering Brain</a>
+      <div class="nav-actions">
+        <a class="nav-link collapse" href="#how">작동 방식</a>
+        <a class="nav-link collapse" href="#philosophy">철학</a>
+        <button class="btn btn-ghost" data-auth-open>로그인</button>
+      </div>
+    </div>
+  </nav>
+
+  <a id="top"></a>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="kicker">Fusion-Engineering Reasoning Gym</span>
+        <h1 class="display">정답이 아니라<br><em>우회로</em>를 설계하라</h1>
+        <p class="lead">기계공학과 AI가 충돌하는 지점의 난제를 하나씩. 양식 없이, 날것 그대로 답하면 까칠하게 채점한다. 쌓이는 건 당신의 사고 과정 그 자체.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" data-auth-open>시작하기</button>
+          <button class="btn btn-ghost btn-lg" data-demo>먼저 한 문제 풀어보기</button>
+        </div>
+        <div class="hero-note">
+          <span><b>원문 무손실</b> 한 글자도 안 바꿈</span>
+          <span><b>즉시 채점</b> 타당성·돌파력</span>
+          <span><b>무가입 체험</b> 가능</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <figure class="hero-photo reveal">
+          <img src="./assets/hero.jpg" alt="들판 위에 선 풍력 터빈" width="900" height="1100" fetchpriority="high">
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <!-- SAMPLE -->
+  <section id="sample">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">맛보기</span>
+        <h2 class="h2">이런 문제가 나온다</h2>
+        <p class="lead">정답이 정해진 시험이 아니다. 트레이드오프가 살아있는 실전 딜레마 하나.</p>
+      </div>
+      <!-- 실제 퀴즈 카드 UI 미리보기 (가짜 스크린샷 아님) -->
+      <article class="qcard sample-card reveal">
+        <div class="qcard-top">
+          <span class="tag">유체역학 / ML 난류 모델링</span>
+          <span class="diff">EXTREME</span>
+          <span class="qcard-prog">R1 · 01</span>
+        </div>
+        <span class="field-label">딜레마 상황</span>
+        <p class="dilemma">RANS 시뮬레이션의 난류 점성 모델이 박리 영역에서 크게 틀려, 고해상도 LES 데이터로 학습한 신경망으로 레이놀즈 응력을 보정하려 한다. 그런데 보정항을 넣는 순간 솔버가 발산하거나, 학습 안 한 형상에선 비물리적 음의 에너지 생성이 터진다.</p>
+        <div class="gloss"><ul>
+          <li>• <b>RANS</b> = 시간평균 난류방정식(빠르지만 부정확)</li>
+          <li>• <b>realizability</b> = 응력이 물리적으로 가능한 범위에 머무는 조건</li>
+        </ul></div>
+        <span class="field-label">질문</span>
+        <p class="question">솔버 안정성과 물리적 실현가능성을 깨지 않으면서 데이터 기반 보정을 끼워넣으려면, 학습 대상과 제약을 어떻게 재정의하겠는가?</p>
+        <div class="hero-cta" style="margin-top:1.6rem">
+          <button class="btn btn-primary" data-demo>이 문제 직접 풀어보기</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">어떻게 작동하나</span>
+        <h2 class="h2">생각하는 과정을 데이터로 남긴다</h2>
+        <p class="lead">맞히는 시험이 아니다. 막힌 곳에서 어떻게 우회로를 뚫는지, 그 사고의 흔적을 모은다.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="step">
+          <div class="num">01</div>
+          <h3>난제 한 개</h3>
+          <p>도메인·딜레마·질문이 담긴 카드를 받는다. 교과서 연습문제는 없다. 매번 트레이드오프가 살아있는 실전 딜레마.</p>
+        </div>
+        <div class="step">
+          <div class="num">02</div>
+          <h3>날것으로 답한다</h3>
+          <p>먼저 자신도(1~10)를 찍고, 양식 없이 자유롭게 쓴다. 당신이 쓴 원문은 한 글자도 바뀌지 않고 그대로 저장된다.</p>
+        </div>
+        <div class="step">
+          <div class="num">03</div>
+          <h3>까칠한 채점</h3>
+          <p>공학적 타당성과 우회 돌파력을 점수로, 치명적 한계를 한 줄로. 아첨 없이. 그리고 다음 문제로.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section id="philosophy" class="philo">
+    <div class="wrap philo-grid">
+      <div class="section-head reveal" style="margin:0">
+        <span class="kicker">왜 이렇게</span>
+        <h2 class="h2">정제하지 않은 사고가<br>가장 비싼 데이터다</h2>
+        <p class="lead">매끄럽게 다듬은 정답보다, 막히고 더듬으며 길을 찾는 과정이 진짜 공학 지능이다.</p>
+      </div>
+      <div class="philo-list reveal">
+        <div class="philo-item">
+          <span class="ic" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+          </span>
+          <div><h3>원문 무손실</h3><p>당신이 쓴 답은 채점·정규화보다 먼저 그대로 적재된다. 손실 없이 보존하니 나중에 어떤 용도로든 쓸 수 있다.</p></div>
+        </div>
+        <div class="philo-item">
+          <span class="ic" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <div><h3>아첨 0%의 채점</h3><p>"좋은 시도예요" 같은 말은 없다. 타당성과 돌파력을 숫자로 보고, 가장 치명적인 약점 하나를 정면으로 짚는다.</p></div>
+        </div>
+        <div class="philo-item">
+          <span class="ic" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v6H4zM4 14h10v6H4z"/></svg>
+          </span>
+          <div><h3>내 데이터는 따로</h3><p>참여자의 답변은 각자 분리 보관된다. 로그인은 당신의 진행 상황과 답변을 안전하게 잇기 위한 것이다.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="wrap reveal">
+      <h2 class="h2">한 문제면 감이 온다</h2>
+      <p class="lead">로그인 없이 지금 한 문제를 풀어보고, 마음에 들면 계정을 만들어 이어가면 된다.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <button class="btn btn-primary btn-lg" data-demo>지금 풀어보기</button>
+        <button class="btn btn-ghost btn-lg" data-auth-open>계정 만들기</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <span>© 2026 Engineering Brain · 융합공학 추론 데이터셋 프로젝트</span>
+      <span class="muted">텔레그램 <b>@leechan_COT_bot</b> 에서도 참여 가능</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ APP (quiz) ══════════════════════════════════════════════ -->
+<div id="app-view" class="hidden">
+  <div class="wrap">
+    <div class="app-bar">
+      <a class="brand" href="#" data-go-home><span class="mark">E</span> Engineering Brain</a>
+      <div class="app-user">
+        <span class="streak" id="streak"></span>
+        <span class="avatar" id="avatar">?</span>
+        <button class="btn btn-ghost" id="signout" style="padding:.5em .9em; font-size:.85rem">나가기</button>
+      </div>
+    </div>
+
+    <main class="app-main">
+      <article class="qcard">
+        <div class="qcard-top">
+          <span class="tag" id="q-domain">—</span>
+          <span class="diff" id="q-diff">—</span>
+          <span class="qcard-prog" id="q-prog">—</span>
+        </div>
+        <span class="field-label">딜레마 상황</span>
+        <p class="dilemma" id="q-dilemma">—</p>
+        <div class="gloss" id="q-glossbox"><ul id="q-gloss"></ul></div>
+        <span class="field-label">질문</span>
+        <p class="question" id="q-question">—</p>
+
+        <span class="field-label scale-label" style="margin-top:1.6rem">
+          <span>먼저, 얼마나 아는가</span>
+          <span class="hint">1 = 감 없음 · 10 = 완전 자신</span>
+        </span>
+        <div class="scale" id="scale"></div>
+
+        <span class="field-label" style="margin-top:1.6rem">내 답 · 양식 없음, 날것 그대로</span>
+        <textarea id="answer" placeholder="물리적 인과를 붙잡고 우회로를 설계해봐…"></textarea>
+        <div class="app-actions">
+          <button class="btn btn-primary" id="submit" disabled>제출하고 채점받기</button>
+          <button class="btn btn-ghost" id="skip">건너뛰기</button>
+        </div>
+        <div class="saved" id="saved">✓ 답변 저장됨 (원문 무손실)</div>
+
+        <div class="feedback" id="feedback">
+          <div class="fb-head">
+            <h3>즉석 채점</h3>
+            <span class="tag">아첨 0%</span>
+          </div>
+          <div class="metric">
+            <div class="metric-top"><span>공학적 타당성</span><b><span id="v-num">0</span>/100</b></div>
+            <div class="bar green"><i id="v-bar"></i></div>
+          </div>
+          <div class="metric">
+            <div class="metric-top"><span>우회 돌파력</span><b><span id="g-num">0</span>/100</b></div>
+            <div class="bar ink"><i id="g-bar"></i></div>
+          </div>
+          <div class="critique"><b>치명적 한계 · </b><span id="critique">—</span></div>
+          <div class="app-actions"><button class="btn btn-primary" id="next">다음 질문으로</button></div>
+        </div>
+
+        <span class="demo-badge" id="demo-badge">데모 모드 · 채점은 샘플입니다</span>
+      </article>
+    </main>
+  </div>
+</div>
+
+<!-- ══ AUTH MODAL ══════════════════════════════════════════════ -->
+<div id="auth-modal" class="modal-back hidden">
+  <div class="modal" style="position:relative">
+    <button class="close" data-auth-close aria-label="닫기">×</button>
+    <h2>Engineering Brain 시작</h2>
+    <p class="sub">이메일로 로그인 링크를 받거나, 구글로 계속하세요. 진행 상황과 답변을 안전하게 잇기 위한 로그인입니다.</p>
+
+    <button class="oauth" id="google-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
+      Google로 계속하기
+    </button>
+
+    <div class="divider">또는 이메일로</div>
+
+    <div class="field-group">
+      <label for="email">이메일 주소</label>
+      <input type="email" id="email" placeholder="you@university.edu" autocomplete="email">
+    </div>
+    <button class="btn btn-primary btn-block" id="magic-btn">로그인 링크 받기</button>
+    <div class="note" id="auth-note"></div>
+
+    <p class="modal-foot">계속하면 답변 데이터의 수집·저장 및 제3자(채점 모델) 전송에 동의하는 것으로 봅니다.<br>이메일 외 개인정보는 수집하지 않습니다.</p>
+  </div>
+</div>
+
+<script src="./config.js"></script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
