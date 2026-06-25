@@ -48,6 +48,7 @@ body{
   font-family:var(--sans); line-height:1.6;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   letter-spacing:-.01em;
+  word-break:keep-all; overflow-wrap:break-word;  /* 한글: 어절(띄어쓰기) 단위 줄바꿈 */
 }
 a{color:inherit}
 button{font-family:inherit}
@@ -272,7 +273,7 @@ input:focus{border-color:var(--accent)}
 .qcard,.app-main,.feedback,.limit-box,.hero-photo{max-width:100%}
 .app-bar,.app-user,.qcard-top,.app-actions,.hero-cta,.brand{min-width:0}
 .app-user{flex-shrink:1; overflow:hidden}
-.dilemma,.question,.field-label,.critique,.lead,.gloss li,.q,.metric-top{overflow-wrap:anywhere; word-break:break-word}
+.dilemma,.question,.field-label,.critique,.lead,.gloss li,.q,.metric-top{overflow-wrap:anywhere; word-break:keep-all}
 .tag{overflow-wrap:anywhere}
 .scale button{
   font:650 .95rem/1 var(--mono); color:var(--ink-2); background:var(--bg);
