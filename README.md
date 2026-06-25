@@ -9,9 +9,21 @@
 ## 현재 상태 (2026-06-25)
 - **라이브**: https://euichanlee0608-svg.github.io/engineering-brain/
 - 레포: `euichanlee0608-svg/engineering-brain` (public)
-- Supabase 프로젝트 `kjlknxwzpmdzawwrurva`(서울) 복구 완료 · `contributions`/`questions` 테이블+RLS 적용 · `config.js`에 공개키 입력됨 → **실연동 모드 ON**(questions DB서빙·답변 RLS저장 동작 검증됨).
-- **남은 수동 단계(대시보드)**: Authentication > URL Configuration 에서 **Site URL** 과 **Redirect URLs** 에 위 Pages 주소 추가 → 그래야 매직링크/구글 로그인이 사이트로 돌아온다. (구글 로그인 쓰려면 Providers에서 OAuth 클라이언트 등록도 필요. 매직링크는 Site URL만 설정하면 동작.)
-- 채점은 아직 mock(`LIVE_GRADING:false`) — 실채점 켜려면 `grade` Edge Function 추가.
+- Supabase `kjlknxwzpmdzawwrurva`(서울) · `contributions`/`questions`/`app_secrets` + RLS · 공개키 입력 → **실연동 ON**.
+- **실채점 ON**(`LIVE_GRADING:true`): `grade` Edge Function 배포됨. 로그인 사용자 → Gemini 실채점(검증 200), 익명/데모 → mock 폴백. 키는 비공개 `app_secrets`(service_role만 읽음).
+- **질문 30개 백필됨**. 이후 텔레그램 리필 시 자동 동기화(아래).
+
+### 남은 사용자 단계 (2가지)
+1. **로그인 켜기 (대시보드)**: Authentication > URL Configuration 의 **Site URL** + **Redirect URLs** 에 위 Pages 주소 추가. (구글 로그인은 Providers에서 OAuth 등록 추가 필요. 매직링크는 Site URL만으로 동작.)
+2. **질문 자동 동기화 켜기 (.env 1줄)**: `~/second_brain/engineering_brain/.env` 에
+   `SUPABASE_URL=https://kjlknxwzpmdzawwrurva.supabase.co` 와
+   `SUPABASE_SERVICE_KEY=<service_role 키>` 추가(대시보드 Settings>API>service_role, **서버 전용 비밀키 — 프론트/깃 금지**).
+   넣는 즉시 적용(봇 재시작 불필요) — 다음 리필부터 일반 질문이 웹에 자동 upsert.
+
+## 질문 동기화 (텔레그램 → 웹)
+`~/second_brain/engineering_brain/eb_sync_web.py`. `ebcore.add_questions`(seed·refill 공통)가 신규
+`audience:"all"` 질문만 Supabase `questions` 로 push(오너 전용 후속질문은 웹 노출 안 함). 멱등(qid PK).
+수동 전체 동기화: `python eb_sync_web.py`. 키 없으면 조용히 no-op(생성 흐름 불간섭).
 
 ## 모드 2가지
 `config.js` 가 비어있으면 **데모 모드**(로그인 없이 둘러보기/체험, 채점은 로컬 mock).
