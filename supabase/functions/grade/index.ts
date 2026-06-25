@@ -48,7 +48,7 @@ function parseScore(raw) {
   try {
     const d = JSON.parse(m[0]);
     const clamp = (n) => Math.max(0, Math.min(100, parseInt(String(n)) || 0));
-    return { validity: clamp(d.validity), ingenuity: clamp(d.ingenuity), critique: String(d.critique ?? "").trim() };
+    return { validity: clamp(d.validity), ingenuity: clamp(d.ingenuity), critique: String(d.critique ?? "").trim(), hint: String(d.hint ?? "").trim() };
   } catch { return null; }
 }
 
@@ -90,7 +90,8 @@ async function notifyTelegram(s, info) {
     `❓ <b>질문</b>\n${esc(cut(info.question, 300))}\n\n` +
     `📝 <b>답변</b>\n${esc(cut(info.answer, 800))}\n\n` +
     `📊 <b>채점</b> 타당성 ${info.v} · 돌파력 ${info.g}\n` +
-    `🎯 <b>치명적 한계</b>\n${esc(cut(info.critique, 300))}`;
+    `🎯 <b>치명적 한계</b>\n${esc(cut(info.critique, 300))}\n\n` +
+    `🧭 <b>힌트</b>\n${esc(cut(info.hint, 300))}`;
   try {
     const r = await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
       method: "POST",
@@ -127,6 +128,7 @@ Deno.serve(async (req) => {
   const question = String(body.prompt || body.question || "").slice(0, 2000);
   const answer = String(body.answer || "").slice(0, 6000);
   const domain = String(body.domain || "").slice(0, 200);
+  const lang = String(body.lang || "ko").toLowerCase().startsWith("en") ? "en" : "ko";
   if (!question || !answer) return json({ error: "missing" }, 400);
 
   const s = await loadSecrets();
@@ -143,7 +145,10 @@ Deno.serve(async (req) => {
   }
 
   const qtext = dilemma ? `[딜레마 상황]\n${dilemma}\n\n[질문]\n${question}` : question;
-  const prompt = `${s.sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}`;
+  const langDir = lang === "en"
+    ? `\n\nIMPORTANT: The candidate answered in English. Write the "critique" and "hint" values in natural English.`
+    : `\n\n중요: critique와 hint 값은 한국어로 작성하라.`;
+  const prompt = `${s.sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}${langDir}`;
 
   for (const key of s.keys) {
     let res;
@@ -153,7 +158,7 @@ Deno.serve(async (req) => {
       if (parsed) {
         await notifyTelegram(s, {
           name, anon: isAnon, domain, dilemma, question, answer,
-          v: parsed.validity, g: parsed.ingenuity, critique: parsed.critique,
+          v: parsed.validity, g: parsed.ingenuity, critique: parsed.critique, hint: parsed.hint,
         });
         return json(parsed);
       }

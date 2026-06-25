@@ -72,13 +72,13 @@
           <span class="qcard-prog">R1 · 01</span>
         </div>
         <span class="field-label" data-i18n="card.dilemma">딜레마 상황</span>
-        <p class="dilemma">RANS 시뮬레이션의 난류 점성 모델이 박리 영역에서 크게 틀려, 고해상도 LES 데이터로 학습한 신경망으로 레이놀즈 응력을 보정하려 한다. 그런데 보정항을 넣는 순간 솔버가 발산하거나, 학습 안 한 형상에선 비물리적 음의 에너지 생성이 터진다.</p>
+        <p class="dilemma" data-i18n="sample.dilemma">RANS 시뮬레이션의 난류 점성 모델이 박리 영역에서 크게 틀려, 고해상도 LES 데이터로 학습한 신경망으로 레이놀즈 응력을 보정하려 한다. 그런데 보정항을 넣는 순간 솔버가 발산하거나, 학습 안 한 형상에선 비물리적 음의 에너지 생성이 터진다.</p>
         <div class="gloss"><ul>
-          <li>• <b>RANS</b> = 시간평균 난류방정식(빠르지만 부정확)</li>
-          <li>• <b>realizability</b> = 응력이 물리적으로 가능한 범위에 머무는 조건</li>
+          <li data-i18n="sample.g1">• <b>RANS</b> = 시간평균 난류방정식(빠르지만 부정확)</li>
+          <li data-i18n="sample.g2">• <b>realizability</b> = 응력이 물리적으로 가능한 범위에 머무는 조건</li>
         </ul></div>
         <span class="field-label" data-i18n="card.question">질문</span>
-        <p class="question">솔버 안정성과 물리적 실현가능성을 깨지 않으면서 데이터 기반 보정을 끼워넣으려면, 학습 대상과 제약을 어떻게 재정의하겠는가?</p>
+        <p class="question" data-i18n="sample.question">솔버 안정성과 물리적 실현가능성을 깨지 않으면서 데이터 기반 보정을 끼워넣으려면, 학습 대상과 제약을 어떻게 재정의하겠는가?</p>
         <div class="hero-cta" style="margin-top:1.6rem">
           <button class="btn btn-primary" data-demo data-i18n="sample.ctaSolve">이 문제 직접 풀어보기</button>
         </div>
@@ -225,7 +225,11 @@
             <div class="bar ink"><i id="g-bar"></i></div>
           </div>
           <div class="critique"><b data-i18n="fb.critique">치명적 한계 · </b><span id="critique">—</span></div>
-          <div class="app-actions"><button class="btn btn-primary" id="next" data-i18n="fb.next">다음 질문으로</button></div>
+          <div class="hint-line" id="hint-line"><b data-i18n="fb.hint">힌트 · </b><span id="hint">—</span></div>
+          <div class="app-actions">
+            <button class="btn btn-ghost" id="retry" data-i18n="fb.retry">다시 답변하기</button>
+            <button class="btn btn-primary" id="next" data-i18n="fb.next">다음 질문으로</button>
+          </div>
         </div>
 
         <!-- 무료 한도 도달 -->

@@ -320,6 +320,11 @@ textarea:focus{border-color:var(--accent)}
   background:var(--warn-soft); color:var(--warn); font-size:.94rem; line-height:1.55;
 }
 .critique b{font-weight:700}
+.hint-line{
+  margin-top:.7rem; padding:.9em 1em; border-radius:var(--r-sm);
+  background:var(--accent-soft); color:var(--accent); font-size:.94rem; line-height:1.55;
+}
+.hint-line b{font-weight:700}
 .demo-badge{
   display:inline-flex; align-items:center; gap:.4rem; margin-top:1.4rem;
   font:500 .76rem/1.4 var(--mono); color:var(--ink-3); padding:.5em .8em;
