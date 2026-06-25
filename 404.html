@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Brain</title>
+<script>
+  // 프로젝트 사이트 베이스로 복귀(잘못된 하위 경로/직접진입 안전망)
+  var base = location.pathname.split("/")[1] || "";
+  location.replace(location.origin + "/" + base + "/");
+</script>
+</head>
+<body></body>
+</html>

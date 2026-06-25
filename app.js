@@ -221,13 +221,23 @@ async function gradeAnswer(q, answer, conf) {
 }
 
 async function saveAnswer(q, answer, conf) {
-  if (!LIVE || !supabase || !state.user) return; // 데모: 저장 안 함
+  if (!LIVE || !supabase || !state.user) return null; // 데모: 저장 안 함
   try {
-    await supabase.from("contributions").insert({
+    const { data } = await supabase.from("contributions").insert({
       qid: q.qid || null, domain: q.domain, question: q.question,
       answer_raw: answer, confidence: conf,
-    });
-  } catch (_) { /* 무손실 원칙: 실패해도 UI는 진행, 추후 재시도 가능 */ }
+    }).select("id").single();
+    return data?.id || null;
+  } catch (_) { return null; } // 무손실 원칙: 실패해도 UI는 진행
+}
+
+async function saveFeedback(id, fb) {
+  if (!id || !LIVE || !supabase) return;
+  try {
+    await supabase.from("contributions")
+      .update({ feedback: { validity: fb.v, ingenuity: fb.g, critique: fb.c } })
+      .eq("id", id);
+  } catch (_) { /* 채점 저장 실패는 무시(원문은 이미 보존됨) */ }
 }
 
 function animateNum(id, to) {
@@ -241,10 +251,11 @@ $("submit").addEventListener("click", async () => {
   $("answer").disabled = true;
   $("submit").style.display = "none"; $("skip").style.display = "none";
 
-  await saveAnswer(q, answer, state.conf);
+  const contribId = await saveAnswer(q, answer, state.conf);
   $("saved").classList.add("show");
 
   const fb = await gradeAnswer(q, answer, state.conf);
+  saveFeedback(contribId, fb); // 채점 결과도 동봉 저장(텔레그램 contrib 과 동일)
   $("critique").textContent = fb.c;
   $("v-num").textContent = "0"; $("g-num").textContent = "0";
   $("v-bar").style.width = "0"; $("g-bar").style.width = "0";

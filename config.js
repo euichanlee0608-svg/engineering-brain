@@ -12,6 +12,6 @@ window.EB_CONFIG = {
   SUPABASE_URL: "https://kjlknxwzpmdzawwrurva.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_ztvNwHATDKSWTPlhQsLGcw_k5IGKiOz", // publishable(공개키, RLS로 보호)
 
-  // 채점: 아직 Edge Function 미연결 → mock 유지. 붙이면 true 로.
-  LIVE_GRADING: false,
+  // 채점: grade Edge Function 연결됨 → 로그인 사용자는 실채점(Gemini), 익명/데모는 mock 폴백.
+  LIVE_GRADING: true,
 };
