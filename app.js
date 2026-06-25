@@ -241,7 +241,7 @@ function render() {
   const domain = (en && q.domain_en) || q.domain;
   const dilemma = (en && q.dilemma_en) || q.dilemma;
   const question = (en && q.question_en) || q.question;
-  const gloss = (en && q.gloss_en) ? q.gloss_en : (q.gloss || []);
+  const gloss = (en && q.gloss_en && q.gloss_en.length) ? q.gloss_en : (q.gloss || []);
   $("q-domain").textContent = domain;
   $("q-diff").textContent = (q.difficulty || "hard").toUpperCase();
   $("q-prog").textContent = `R1 · ${String((state.idx % state.questions.length) + 1).padStart(2, "0")}`;
