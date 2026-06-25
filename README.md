@@ -13,12 +13,19 @@
 - **실채점 ON**(`LIVE_GRADING:true`): `grade` Edge Function 배포됨. 로그인 사용자 → Gemini 실채점(검증 200), 익명/데모 → mock 폴백. 키는 비공개 `app_secrets`(service_role만 읽음).
 - **질문 30개 백필됨**. 이후 텔레그램 리필 시 자동 동기화(아래).
 
-### 남은 사용자 단계 (2가지)
-1. **로그인 켜기 (대시보드)**: Authentication > URL Configuration 의 **Site URL** + **Redirect URLs** 에 위 Pages 주소 추가. (구글 로그인은 Providers에서 OAuth 등록 추가 필요. 매직링크는 Site URL만으로 동작.)
-2. **질문 자동 동기화 켜기 (.env 1줄)**: `~/second_brain/engineering_brain/.env` 에
-   `SUPABASE_URL=https://kjlknxwzpmdzawwrurva.supabase.co` 와
-   `SUPABASE_SERVICE_KEY=<service_role 키>` 추가(대시보드 Settings>API>service_role, **서버 전용 비밀키 — 프론트/깃 금지**).
-   넣는 즉시 적용(봇 재시작 불필요) — 다음 리필부터 일반 질문이 웹에 자동 upsert.
+### 무료 흐름 / 로그인 / 알림
+- **이름만 입력 → 3문제 무료 실채점**: Supabase 익명 로그인(이름은 메타데이터). `grade` 함수가 익명 사용자의 채점 횟수를 세어 **서버측 3회 제한**(초과 시 로그인 유도). 답변은 익명이라도 `contributions`에 이름 태그로 저장.
+- **더 풀기/저장**: 이메일 매직링크 또는 구글 로그인.
+- **웹 사용 시 텔레그램 알림**: 채점 성공하면 `grade` 함수가 **오너 COT봇(@leechan_COT_bot)**으로 `[질문+답변+점수+이름]` 메시지 발송(`app_secrets`의 telegram_notify_token/owner_chat). 검증됨.
+- **한/영 토글**: 상단 KO/EN(UI 크롬 i18n 스캐폴드). 질문 본문 영문화는 추후(`questions.lang`).
+- **도메인 선택**: 섹션 목업(전체=활성, 분야별=준비중). 질문 품질 검증 후 오픈.
+
+### 남은 사용자 단계 (3가지, 대시보드/.env)
+1. **로그인 Site URL (대시보드)**: Authentication > URL Configuration 의 **Site URL** + **Redirect URLs** 에 Pages 주소 추가. (구글은 Providers OAuth 등록 추가. 매직링크는 Site URL만으로 동작.)
+2. **익명 로그인 허용 (대시보드)**: Authentication > Sign In / Providers 에서 **Anonymous sign-ins 켜기** → 그래야 "이름만 입력 3문제 무료"가 동작.
+3. **질문 자동 동기화 (.env 1줄)**: `~/second_brain/engineering_brain/.env` 에
+   `SUPABASE_URL=https://kjlknxwzpmdzawwrurva.supabase.co` 와 `SUPABASE_SERVICE_KEY=<service_role 키>` 추가
+   (Settings>API>service_role, **서버 전용 비밀키 — 프론트/깃 금지**). 넣는 즉시 적용(봇 재시작 불필요).
 
 ## 질문 동기화 (텔레그램 → 웹)
 `~/second_brain/engineering_brain/eb_sync_web.py`. `ebcore.add_questions`(seed·refill 공통)가 신규
