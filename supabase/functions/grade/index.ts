@@ -69,23 +69,35 @@ function extract(data) {
 }
 
 function cut(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, n) + "…" : s; }
+function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
 async function notifyTelegram(s, info) {
   if (!s.tgToken || !s.tgChat) return;
-  const tag = info.anon ? " (익명·무료)" : " (로그인)";
+  // HTML parse_mode + 안전 이모지(🌐만, 변형선택자 이모지 제외)로 클라이언트 호환성 확보. 딜레마 포함.
+  const tag = info.anon ? "익명·무료" : "로그인";
   const text =
-    `🌐 웹 기여 — ${info.name || "이름없음"}${tag}\n` +
-    `🏷️ ${cut(info.domain, 60)}\n\n` +
-    `❓ ${cut(info.question, 200)}\n\n` +
-    `✍️ ${cut(info.answer, 600)}\n\n` +
-    `📊 타당성 ${info.v} · 돌파력 ${info.g}\n` +
-    `🎯 ${cut(info.critique, 300)}`;
+    `🌐 <b>웹 기여</b> — ${esc(info.name || "이름없음")} (${tag})\n\n` +
+    `<b>도메인</b>\n${esc(cut(info.domain, 80))}\n\n` +
+    `<b>딜레마</b>\n${esc(cut(info.dilemma, 500))}\n\n` +
+    `<b>질문</b>\n${esc(cut(info.question, 300))}\n\n` +
+    `<b>답변</b>\n${esc(cut(info.answer, 800))}\n\n` +
+    `<b>채점</b> 타당성 ${info.v} · 돌파력 ${info.g}\n` +
+    `<b>치명적 한계</b>\n${esc(cut(info.critique, 300))}`;
   try {
-    await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
+    const r = await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: s.tgChat, text, disable_web_page_preview: true }),
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ chat_id: s.tgChat, text, parse_mode: "HTML", disable_web_page_preview: true }),
     });
+    // HTML 파싱 실패(잘못된 태그 등) 시 plain 텍스트로 폴백
+    if (!r.ok) {
+      const plain = text.replace(/<\/?b>/g, "");
+      await fetch(`https://api.telegram.org/bot${s.tgToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ chat_id: s.tgChat, text: plain, disable_web_page_preview: true }),
+      });
+    }
   } catch { /* 알림 실패는 채점에 영향 없음 */ }
 }
 
@@ -132,7 +144,7 @@ Deno.serve(async (req) => {
       const parsed = parseScore(extract(res.data));
       if (parsed) {
         await notifyTelegram(s, {
-          name, anon: isAnon, domain, question, answer,
+          name, anon: isAnon, domain, dilemma, question, answer,
           v: parsed.validity, g: parsed.ingenuity, critique: parsed.critique,
         });
         return json(parsed);

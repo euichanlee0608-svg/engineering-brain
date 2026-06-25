@@ -38,7 +38,7 @@ const T = {
     "cta.h2": "한 문제면 감이 온다", "cta.lead": "이름만 입력하면 3문제까지 무료로 채점받을 수 있다. 더 풀고 데이터를 남기려면 로그인.", "cta.start": "지금 시작하기",
     "foot.copy": "© 2026 Engineering Brain · 융합공학 추론 데이터셋 프로젝트",
     "app.exit": "나가기",
-    "card.confidence": "먼저, 얼마나 아는가", "card.confhint": "1 = 감 없음 · 10 = 완전 자신", "card.answer": "내 답 · 양식 없음, 날것 그대로", "card.placeholder": "물리적 인과를 붙잡고 우회로를 설계해봐…", "card.submit": "제출하고 채점받기", "card.skip": "건너뛰기", "card.saved": "✓ 답변 저장됨 (원문 무손실)",
+    "card.confidence": "먼저, 얼마나 아는가", "card.confhint": "1 = 감 없음 · 10 = 완전 자신", "card.answer": "내 답 · 양식 없음, 날것 그대로", "card.placeholder": "물리적 인과를 붙잡고 우회로를 설계해봐…", "card.submit": "제출하고 채점받기", "card.skip": "건너뛰기", "card.saved": "✓ 답변 저장됨 (원문 무손실)", "card.grading": "채점 중…",
     "fb.title": "즉석 채점", "fb.tag": "아첨 0%", "fb.validity": "공학적 타당성", "fb.ingenuity": "우회 돌파력", "fb.critique": "치명적 한계 · ", "fb.next": "다음 질문으로",
     "limit.title": "무료 3문제를 다 풀었어요", "limit.body": "로그인하면 계속 풀 수 있고, 답변과 채점이 당신의 데이터셋으로 저장됩니다.", "limit.cta": "로그인하고 계속하기",
     "badge.demo": "데모 모드 · 채점은 샘플입니다",
@@ -67,7 +67,7 @@ const T = {
     "cta.h2": "One problem and you'll get it", "cta.lead": "Enter just your name for 3 free graded problems. Sign in to keep going and save your data.", "cta.start": "Start now",
     "foot.copy": "© 2026 Engineering Brain · Fusion-engineering reasoning dataset",
     "app.exit": "Exit",
-    "card.confidence": "First, how well do you know this", "card.confhint": "1 = no clue · 10 = fully sure", "card.answer": "Your answer · no format, raw", "card.placeholder": "Grab the physical causality and design a workaround…", "card.submit": "Submit and get graded", "card.skip": "Skip", "card.saved": "✓ Answer saved (lossless)",
+    "card.confidence": "First, how well do you know this", "card.confhint": "1 = no clue · 10 = fully sure", "card.answer": "Your answer · no format, raw", "card.placeholder": "Grab the physical causality and design a workaround…", "card.submit": "Submit and get graded", "card.skip": "Skip", "card.saved": "✓ Answer saved (lossless)", "card.grading": "Grading…",
     "fb.title": "Instant grading", "fb.tag": "0% flattery", "fb.validity": "Engineering validity", "fb.ingenuity": "Breakthrough ingenuity", "fb.critique": "Fatal flaw · ", "fb.next": "Next problem",
     "limit.title": "You've used your 3 free problems", "limit.body": "Sign in to keep going, and your answers and grades are saved as your dataset.", "limit.cta": "Sign in to continue",
     "badge.demo": "Demo mode · grading is sample",
@@ -91,7 +91,7 @@ function applyLang() {
   document.querySelectorAll("#lang-toggle button").forEach((b) =>
     b.classList.toggle("active", b.dataset.lang === LANG));
   renderDomains();
-  if (!appView.classList.contains("hidden")) render();
+  // render()는 호출하지 않음 — 앱 진행 중 언어 전환이 입력/진행을 지우지 않게.
 }
 on("#lang-toggle button", "click", (e) => {
   LANG = e.currentTarget.dataset.lang;
@@ -246,6 +246,7 @@ function render() {
   $("feedback").classList.remove("show");
   $("limit-box").classList.remove("show");
   $("saved").classList.remove("show");
+  $("grading").classList.remove("show");
   $("submit").disabled = true;
   $("submit").style.display = ""; $("skip").style.display = "";
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -328,9 +329,11 @@ $("submit").addEventListener("click", async () => {
   $("submit").style.display = "none"; $("skip").style.display = "none";
 
   const contribId = await saveAnswer(q, answer, state.conf);
-  $("saved").classList.add("show");
+  if (contribId) $("saved").classList.add("show");  // 실제 저장된 경우만(데모는 표시 안 함)
+  $("grading").classList.add("show");               // 채점 중 표시(Gemini 1~3초)
 
   const fb = await gradeAnswer(q, answer, state.conf);
+  $("grading").classList.remove("show");
   if (fb && fb.limit) {                       // 익명 무료 3회 초과
     state.freeUsed = 3;
     $("limit-box").classList.add("show");
