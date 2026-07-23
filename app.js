@@ -27,7 +27,7 @@ const T = {
     "sample.dilemma": "RANS 시뮬레이션의 난류 점성 모델이 박리 영역에서 크게 틀려, 고해상도 LES 데이터로 학습한 신경망으로 레이놀즈 응력을 보정하려 한다. 그런데 보정항을 넣는 순간 솔버가 발산하거나, 학습 안 한 형상에선 비물리적 음의 에너지 생성이 터진다.",
     "sample.question": "솔버 안정성과 물리적 실현가능성을 깨지 않으면서 데이터 기반 보정을 끼워넣으려면, 학습 대상과 제약을 어떻게 재정의하겠는가?",
     "sample.g1": "• <b>RANS</b> = 시간평균 난류방정식(빠르지만 부정확)", "sample.g2": "• <b>realizability</b> = 응력이 물리적으로 가능한 범위에 머무는 조건",
-    "card.dilemma": "딜레마 상황", "card.question": "질문",
+    "card.dilemma": "딜레마 상황", "card.question": "질문", "card.cardsToggle": "🃏 참고 카드 (넘어서도 됨)",
     "how.kicker": "어떻게 작동하나", "how.h2": "생각하는 과정을 데이터로 남긴다", "how.lead": "맞히는 시험이 아니다. 막힌 곳에서 어떻게 우회로를 뚫는지, 그 사고의 흔적을 모은다.",
     "how.s1t": "난제 한 개", "how.s1d": "도메인·딜레마·질문이 담긴 카드를 받는다. 교과서 연습문제는 없다. 매번 트레이드오프가 살아있는 실전 딜레마.",
     "how.s2t": "날것으로 답한다", "how.s2d": "먼저 자신도(1~10)를 찍고, 양식 없이 자유롭게 쓴다. 당신이 쓴 원문은 한 글자도 바뀌지 않고 그대로 저장된다.",
@@ -59,7 +59,7 @@ const T = {
     "sample.dilemma": "The eddy-viscosity model in a RANS simulation is badly wrong in separation regions, so you correct the Reynolds stresses with a neural network trained on high-resolution LES data. But the moment you add the correction term, the solver diverges, or on untrained geometries it produces unphysical negative energy generation.",
     "sample.question": "To embed a data-driven correction without breaking solver stability or physical realizability, how would you redefine the learning target and its constraints?",
     "sample.g1": "• <b>RANS</b> = Time-averaged turbulence equations (fast but inaccurate)", "sample.g2": "• <b>realizability</b> = The condition that stresses stay within physically possible values",
-    "card.dilemma": "Dilemma", "card.question": "Question",
+    "card.dilemma": "Dilemma", "card.question": "Question", "card.cardsToggle": "🃏 Reference cards (feel free to go beyond)",
     "how.kicker": "How it works", "how.h2": "We capture the reasoning, not the answer", "how.lead": "Not a quiz to ace. We collect the trace of how you carve a path out when you're stuck.",
     "how.s1t": "One hard problem", "how.s1d": "A card with domain, dilemma and question. No textbook exercises. A real dilemma with live trade-offs every time.",
     "how.s2t": "Answer raw", "how.s2d": "Rate your confidence (1-10) first, then write freely with no format. Your words are stored exactly, unchanged.",
@@ -208,7 +208,15 @@ const SAMPLE = [
     domain_en: "Fluid dynamics / ML turbulence modeling",
     dilemma_en: "The eddy-viscosity model in a RANS simulation is badly wrong in separation regions, so you want to correct the Reynolds stresses with a neural network trained on high-resolution LES data. But the moment you insert the NN correction term, the solver diverges, or on geometries it was not trained on it produces unphysical negative energy generation.",
     question_en: "To embed a data-driven correction without breaking solver stability or physical realizability, how would you redefine the learning target and its constraints?",
-    gloss_en: [["RANS", "Time-averaged turbulence equations; fast but inaccurate"], ["Realizability", "The condition that stresses stay within physically possible values"]] },
+    gloss_en: [["RANS", "Time-averaged turbulence equations; fast but inaccurate"], ["Realizability", "The condition that stresses stay within physically possible values"]],
+    cards: ["보정항을 응력에 직접 더하면 realizability를 깨기 쉽다", "보정을 물리모델의 계수(eddy-viscosity)에 곱하는 형태로 제한하면 발산 위험이 줄어든다",
+      "학습 도메인 밖 형상에서 신경망 출력은 외삽이라 신뢰 불가", "솔버와 신경망을 매 타임스텝 강결합하면 불안정, 느슨결합(post-hoc)이 더 안정적",
+      "물리적 사전(anisotropy invariant 등)으로 신경망 출력공간을 제한할 수 있다", "훈련 데이터(LES)가 커버 못한 레이놀즈수 영역에서는 보정을 끄는 폴백이 필요하다",
+      "보정 크기에 상한(clip)을 걸면 발산은 막지만 보정 효과도 줄어든다", "앙상블로 불확실성을 추정해 불확실성이 큰 영역만 보정을 약화시킬 수 있다"],
+    cards_en: ["Adding the correction directly to the stresses easily breaks realizability", "Constraining the correction to a coefficient (eddy-viscosity) reduces divergence risk",
+      "Network output on out-of-distribution geometries is extrapolation, hence untrustworthy", "Tight per-timestep coupling with the solver is unstable; loose/post-hoc coupling is more stable",
+      "A physical prior (e.g. anisotropy invariants) can constrain the network's output space", "Regions of Reynolds number not covered by LES training data need a fallback that disables correction",
+      "Clipping the correction magnitude prevents divergence but also weakens the correction", "An ensemble can estimate uncertainty and damp correction where uncertainty is high"] },
   { domain: "사족보행 로봇 / Sim-to-Real 강화학습", difficulty: "extreme",
     dilemma: "MuJoCo에서 PPO로 학습한 보행 정책이 시뮬에선 거의 완벽한데, 실제 액추에이터의 기어 백래시·토크 포화·8ms 통신지연이 겹치면 접촉 타이밍이 어긋나 비틀거린다. 도메인 랜덤화를 넓히면 강인해지지만 평균 보행속도가 급락하고, 실하드웨어 롤아웃은 마모로 50 에피소드만 허용된다.",
     question: "강인성과 평균성능을 동시에 살리려면 랜덤화 '분포 자체'를 어떻게 설계·스케줄링하고, 그 50 에피소드를 어디에 쓰겠는가?",
@@ -216,7 +224,15 @@ const SAMPLE = [
     domain_en: "Quadruped robots / Sim-to-Real reinforcement learning",
     dilemma_en: "A walking policy trained with PPO in MuJoCo is nearly flawless in simulation, but on real hardware the combination of actuator gear backlash, torque saturation, and an 8 ms communication delay throws off the contact timing and the robot staggers. Widening domain randomization buys robustness but sharply drops average speed, and real-hardware rollouts are limited to 50 episodes by wear.",
     question_en: "To preserve both robustness and average performance, how would you design and schedule the randomization 'distribution itself,' and where would you spend those 50 episodes?",
-    gloss_en: [["Backlash", "Positional dead zone from the clearance between meshing gear teeth"], ["Domain randomization", "Randomly perturbing simulator properties to build robustness"]] },
+    gloss_en: [["Backlash", "Positional dead zone from the clearance between meshing gear teeth"], ["Domain randomization", "Randomly perturbing simulator properties to build robustness"]],
+    cards: ["랜덤화 범위를 넓히면 정책이 평균적으로 보수화돼 속도가 떨어진다", "커리큘럼(점진적 확장)으로 랜덤화 범위를 늘리면 최종 강인성은 유지하며 수렴을 도울 수 있다",
+      "50 에피소드는 학습이 아니라 검증(sim-to-real gap 측정)에 쓰는 것이 정보량이 크다", "통신지연은 액션 지연 보상(action delay compensation)으로 시뮬 안에서 흉내낼 수 있다",
+      "백래시·토크포화는 액추에이터 모델을 시뮬에 넣어야 실제로 랜덤화 효과가 생긴다", "실하드웨어 데이터로 시뮬 파라미터 분포를 사후 보정(system identification)할 수 있다",
+      "평균성능과 강인성은 근본적으로 트레이드오프 — 둘 다 최대화는 파레토 경계 문제다", "에피소드를 정책 미세조정(fine-tune)에 쓰면 실패시 회수 불가능한 자산 소모다"],
+    cards_en: ["Widening the randomization range makes the policy conservative on average, dropping speed", "A curriculum (gradually expanding the range) can aid convergence while preserving final robustness",
+      "Spending the 50 episodes on validation (measuring the sim-to-real gap) rather than training yields more information", "Communication delay can be emulated in simulation via action delay compensation",
+      "Backlash and torque saturation only produce a real randomization effect if the actuator model is added to the simulator", "Real-hardware data can be used to post-hoc correct the simulator's parameter distribution (system identification)",
+      "Average performance and robustness are fundamentally a trade-off — maximizing both is a Pareto-frontier problem", "Spending episodes on policy fine-tuning risks non-recoverable asset loss on failure"] },
 ];
 
 async function loadQuestions() {
@@ -227,7 +243,8 @@ async function loadQuestions() {
     if (!error && data?.length) {
       // 셔플(매번 같은 순서 방지)
       const arr = data.map((q) => ({ domain: q.domain, difficulty: q.difficulty, dilemma: q.dilemma, question: q.question, gloss: q.gloss || [], qid: q.qid,
-        domain_en: q.domain_en, dilemma_en: q.dilemma_en, question_en: q.question_en, gloss_en: q.gloss_en }));
+        domain_en: q.domain_en, dilemma_en: q.dilemma_en, question_en: q.question_en, gloss_en: q.gloss_en,
+        cards: q.cards || [], cards_en: q.cards_en || [] }));
       for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
       state.questions = arr;
     }
@@ -251,6 +268,12 @@ function render() {
   const ul = $("q-gloss"); ul.innerHTML = "";
   gloss.forEach(([t, d]) => { const li = document.createElement("li"); li.innerHTML = `• <b>${t}</b> = ${d}`; ul.appendChild(li); });
   $("q-glossbox").style.display = gloss.length ? "block" : "none";
+
+  const cards = (en && q.cards_en && q.cards_en.length) ? q.cards_en : (q.cards || []);
+  const cardsUl = $("q-cards"); cardsUl.innerHTML = "";
+  cards.forEach((c) => { const li = document.createElement("li"); li.textContent = `• ${c}`; cardsUl.appendChild(li); });
+  $("q-cardbox").style.display = cards.length ? "block" : "none";
+  $("q-cardbox").open = false;
 
   const u = state.user;
   $("avatar").textContent = u ? (u.name?.[0] || "?").toUpperCase() : "◆";
