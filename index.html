@@ -39,8 +39,8 @@
         <h1 class="display"><span data-i18n="hero.title1">정답이 아니라</span><br><em data-i18n="hero.titleEm">우회로</em><span data-i18n="hero.title2">를 설계하라</span></h1>
         <p class="lead" data-i18n="hero.lead">기계공학과 AI가 충돌하는 지점의 난제를 하나씩. 양식 없이, 날것 그대로 답하면 까칠하게 채점한다. 쌓이는 건 당신의 사고 과정 그 자체.</p>
         <div class="hero-cta">
-          <button class="btn btn-primary btn-lg" data-auth-open data-i18n="hero.ctaStart">시작하기</button>
-          <button class="btn btn-ghost btn-lg" data-demo data-i18n="hero.ctaDemo">먼저 한 문제 풀어보기</button>
+          <button class="btn btn-primary btn-lg" data-demo data-category="engineering" data-i18n="hero.ctaEng">🔧 공학 난제 풀기</button>
+          <button class="btn btn-ghost btn-lg" data-demo data-category="philosophy" data-i18n="hero.ctaPhil">🤔 철학 딜레마 풀기</button>
         </div>
         <div class="hero-note">
           <span><b data-i18n="hero.note1b">무가입 3문제</b> <span data-i18n="hero.note1t">이름만 입력</span></span>
@@ -80,7 +80,32 @@
         <span class="field-label" data-i18n="card.question">질문</span>
         <p class="question" data-i18n="sample.question">솔버 안정성과 물리적 실현가능성을 깨지 않으면서 데이터 기반 보정을 끼워넣으려면, 학습 대상과 제약을 어떻게 재정의하겠는가?</p>
         <div class="hero-cta" style="margin-top:1.6rem">
-          <button class="btn btn-primary" data-demo data-i18n="sample.ctaSolve">이 문제 직접 풀어보기</button>
+          <button class="btn btn-primary" data-demo data-category="engineering" data-i18n="sample.ctaSolve">이 문제 직접 풀어보기</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY SAMPLE -->
+  <section id="sample-phil">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker" data-i18n="samplePhil.kicker">또 다른 코너</span>
+        <h2 class="h2" data-i18n="samplePhil.h2">철학 딜레마도 있다</h2>
+        <p class="lead" data-i18n="samplePhil.lead">정답 없는 질문에 당신의 입장을 걸어라. 공학과는 다른 결의 사고실험.</p>
+      </div>
+      <article class="qcard sample-card reveal">
+        <div class="qcard-top">
+          <span class="tag">고전 윤리학 · 트롤리 문제</span>
+          <span class="diff">HARD</span>
+          <span class="qcard-prog">R1 · 01</span>
+        </div>
+        <span class="field-label" data-i18n="card.dilemma">딜레마 상황</span>
+        <p class="dilemma" data-i18n="samplePhil.dilemma">폭주하는 트롤리가 선로에 묶인 5명을 향해 달려간다. 당신 옆의 레버를 당기면 트롤리는 다른 선로로 빠지지만, 그 선로엔 1명이 묶여 있다. 아무것도 안 하면 5명이 죽고, 레버를 당기면 5명은 살지만 당신의 행동으로 1명이 죽는다.</p>
+        <span class="field-label" data-i18n="card.question">질문</span>
+        <p class="question" data-i18n="samplePhil.question">레버를 당기겠는가? '아무것도 안 함'과 '내 손으로 죽임'은 도덕적으로 같은가, 다른가?</p>
+        <div class="hero-cta" style="margin-top:1.6rem">
+          <button class="btn btn-primary" data-demo data-category="philosophy" data-i18n="sample.ctaSolve">이 문제 직접 풀어보기</button>
         </div>
       </article>
     </div>
@@ -208,7 +233,7 @@
         <div class="scale" id="scale"></div>
 
         <span class="field-label" style="margin-top:1.6rem" data-i18n="card.answer">내 답 · 양식 없음, 날것 그대로</span>
-        <textarea id="answer" data-i18n-ph="card.placeholder" placeholder="물리적 인과를 붙잡고 우회로를 설계해봐…"></textarea>
+        <textarea id="answer" placeholder="물리적 인과를 붙잡고 우회로를 설계해봐…"></textarea>
         <div class="app-actions">
           <button class="btn btn-primary" id="submit" disabled data-i18n="card.submit">제출하고 채점받기</button>
           <button class="btn btn-ghost" id="skip" data-i18n="card.skip">건너뛰기</button>
@@ -222,11 +247,11 @@
             <span class="tag" data-i18n="fb.tag">아첨 0%</span>
           </div>
           <div class="metric">
-            <div class="metric-top"><span data-i18n="fb.validity">공학적 타당성</span><b><span id="v-num">0</span>/100</b></div>
+            <div class="metric-top"><span id="v-label">공학적 타당성</span><b><span id="v-num">0</span>/100</b></div>
             <div class="bar green"><i id="v-bar"></i></div>
           </div>
           <div class="metric">
-            <div class="metric-top"><span data-i18n="fb.ingenuity">우회 돌파력</span><b><span id="g-num">0</span>/100</b></div>
+            <div class="metric-top"><span id="g-label">우회 돌파력</span><b><span id="g-num">0</span>/100</b></div>
             <div class="bar ink"><i id="g-bar"></i></div>
           </div>
           <div class="critique"><b data-i18n="fb.critique">치명적 한계 · </b><span id="critique">—</span></div>

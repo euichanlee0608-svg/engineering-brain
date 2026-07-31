@@ -18,7 +18,7 @@ const FREE_LIMIT = 3; // 익명(이름만) 사용자 무료 실채점 횟수
 async function loadSecrets() {
   const url = Deno.env.get("SUPABASE_URL");
   const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const keys = "gemini_keys,gemini_model,grade_sys,telegram_notify_token,telegram_owner_chat";
+  const keys = "gemini_keys,gemini_model,grade_sys,grade_sys_philosophy,telegram_notify_token,telegram_owner_chat";
   const r = await fetch(`${url}/rest/v1/app_secrets?select=key,value&key=in.(${keys})`,
     { headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
   const rows = await r.json();
@@ -28,6 +28,7 @@ async function loadSecrets() {
     keys: (m["gemini_keys"] || "").split(",").map((k) => k.trim()).filter(Boolean),
     model: m["gemini_model"] || "gemini-flash-latest",
     sys: m["grade_sys"] || "",
+    sysPhilosophy: m["grade_sys_philosophy"] || "",
     tgToken: m["telegram_notify_token"] || "",
     tgChat: m["telegram_owner_chat"] || "",
   };
@@ -83,8 +84,9 @@ async function notifyTelegram(s, info) {
   if (!s.tgToken || !s.tgChat) return;
   // HTML parse_mode + 안전 이모지(🌐만, 변형선택자 이모지 제외)로 클라이언트 호환성 확보. 딜레마 포함.
   const tag = info.anon ? "익명·무료" : "로그인";
+  const catTag = info.category === "philosophy" ? "철학" : "공학";
   const text =
-    `🌐 <b>웹 기여</b> — ${esc(info.name || "이름없음")} (${tag})\n\n` +
+    `🌐 <b>웹 기여</b> [${catTag}] — ${esc(info.name || "이름없음")} (${tag})\n\n` +
     `📌 <b>도메인</b>\n${esc(cut(info.domain, 80))}\n\n` +
     `🧩 <b>딜레마</b>\n${esc(cut(info.dilemma, 500))}\n\n` +
     `❓ <b>질문</b>\n${esc(cut(info.question, 300))}\n\n` +
@@ -129,10 +131,12 @@ Deno.serve(async (req) => {
   const answer = String(body.answer || "").slice(0, 6000);
   const domain = String(body.domain || "").slice(0, 200);
   const lang = String(body.lang || "ko").toLowerCase().startsWith("en") ? "en" : "ko";
+  const category = String(body.category || "engineering").toLowerCase() === "philosophy" ? "philosophy" : "engineering";
   if (!question || !answer) return json({ error: "missing" }, 400);
 
   const s = await loadSecrets();
-  if (!s.keys.length || !s.sys) return json({ error: "not_configured" }, 500);
+  const sys = category === "philosophy" ? (s.sysPhilosophy || s.sys) : s.sys;
+  if (!s.keys.length || !sys) return json({ error: "not_configured" }, 500);
 
   const isAnon = claims.is_anonymous === true;
   const uid = claims.sub;
@@ -148,7 +152,7 @@ Deno.serve(async (req) => {
   const langDir = lang === "en"
     ? `\n\nIMPORTANT: The candidate answered in English. Write the "critique" and "hint" values in natural English.`
     : `\n\n중요: critique와 hint 값은 한국어로 작성하라.`;
-  const prompt = `${s.sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}${langDir}`;
+  const prompt = `${sys}\n\n[질문]\n${qtext}\n\n[응시자 답변]\n${answer}${langDir}`;
 
   for (const key of s.keys) {
     let res;
@@ -157,7 +161,7 @@ Deno.serve(async (req) => {
       const parsed = parseScore(extract(res.data));
       if (parsed) {
         await notifyTelegram(s, {
-          name, anon: isAnon, domain, dilemma, question, answer,
+          name, anon: isAnon, domain, dilemma, question, answer, category,
           v: parsed.validity, g: parsed.ingenuity, critique: parsed.critique, hint: parsed.hint,
         });
         return json(parsed);
