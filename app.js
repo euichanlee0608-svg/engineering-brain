@@ -20,7 +20,7 @@ const T = {
     "nav.how": "작동 방식", "nav.domains": "도메인", "nav.login": "로그인",
     "hero.kicker": "Fusion-Engineering Reasoning Gym",
     "hero.title1": "정답이 아니라", "hero.titleEm": "우회로", "hero.title2": "를 설계하라",
-    "hero.lead": "기계공학과 AI가 충돌하는 지점의 난제를 하나씩. 양식 없이, 날것 그대로 답하면 까칠하게 채점한다. 쌓이는 건 당신의 사고 과정 그 자체.",
+    "hero.lead": "공학의 여러 분야가 충돌하는 지점의 난제를 하나씩. 양식 없이, 날것 그대로 답하면 까칠하게 채점한다. 쌓이는 건 당신의 사고 과정 그 자체.",
     "hero.ctaEng": "🔧 공학 난제 풀기", "hero.ctaPhil": "🤔 철학 딜레마 풀기",
     "hero.note1b": "무가입 3문제", "hero.note1t": "이름만 입력", "hero.note2b": "즉시 채점", "hero.note2t": "타당성·돌파력", "hero.note3b": "원문 무손실", "hero.note3t": "한 글자도 안 바꿈",
     "sample.kicker": "맛보기", "sample.h2": "이런 문제가 나온다", "sample.lead": "정답이 정해진 시험이 아니다. 트레이드오프가 살아있는 실전 딜레마 하나.", "sample.ctaSolve": "이 문제 직접 풀어보기",
@@ -35,8 +35,8 @@ const T = {
     "how.s1t": "난제 한 개", "how.s1d": "도메인·딜레마·질문이 담긴 카드를 받는다. 교과서 연습문제는 없다. 매번 트레이드오프가 살아있는 실전 딜레마.",
     "how.s2t": "날것으로 답한다", "how.s2d": "먼저 자신도(1~10)를 찍고, 양식 없이 자유롭게 쓴다. 당신이 쓴 원문은 한 글자도 바뀌지 않고 그대로 저장된다.",
     "how.s3t": "까칠한 채점", "how.s3d": "공학적 타당성과 우회 돌파력을 점수로, 치명적 한계를 한 줄로. 아첨 없이. 그리고 다음 문제로.",
-    "dom.kicker": "도메인", "dom.h2": "풀고 싶은 분야를 골라서", "dom.lead": "지금은 융합공학 난제가 한데 섞여 나온다. 곧 도메인별로 골라 풀 수 있게 확장된다.", "dom.note": "※ 도메인 선택은 준비 중입니다. 질문 품질 검증 후 분야별로 순차 오픈됩니다.",
-    "dom.all": "융합 난제 (전체)", "dom.d1": "로보틱스 / 제어", "dom.d2": "유체 · 열 · 에너지", "dom.d3": "신호처리 / 임베디드", "dom.d4": "재료 · 구조", "dom.d5": "배터리 / 전력", "dom.now": "지금 풀기", "dom.soon": "준비중",
+    "dom.kicker": "도메인", "dom.h2": "풀고 싶은 분야를 골라서", "dom.lead": "공학과 철학, 각각 세부 분야를 골라 바로 풀 수 있다.",
+    "dom.engHead": "🔧 공학 분야", "dom.philHead": "🤔 철학 갈래",
     "phil.kicker": "왜 이렇게", "phil.h2": "정제하지 않은 사고가<br>가장 비싼 데이터다", "phil.lead": "매끄럽게 다듬은 정답보다, 막히고 더듬으며 길을 찾는 과정이 진짜 공학 지능이다.",
     "phil.i1t": "원문 무손실", "phil.i1d": "당신이 쓴 답은 채점·정규화보다 먼저 그대로 적재된다. 손실 없이 보존하니 나중에 어떤 용도로든 쓸 수 있다.",
     "phil.i2t": "아첨 0%의 채점", "phil.i2d": "\"좋은 시도예요\" 같은 말은 없다. 타당성과 돌파력을 숫자로 보고, 가장 치명적인 약점 하나를 정면으로 짚는다.",
@@ -55,7 +55,7 @@ const T = {
     "nav.how": "How it works", "nav.domains": "Domains", "nav.login": "Sign in",
     "hero.kicker": "Fusion-Engineering Reasoning Gym",
     "hero.title1": "Design the", "hero.titleEm": "workaround", "hero.title2": ", not the answer",
-    "hero.lead": "Hard problems where mechanical engineering collides with AI, one at a time. Answer raw, no format, and get graded without flattery. What accumulates is your reasoning itself.",
+    "hero.lead": "Hard problems where different fields of engineering collide, one at a time. Answer raw, no format, and get graded without flattery. What accumulates is your reasoning itself.",
     "hero.ctaEng": "🔧 Engineering challenges", "hero.ctaPhil": "🤔 Philosophy dilemmas",
     "hero.note1b": "3 free", "hero.note1t": "name only", "hero.note2b": "Instant grading", "hero.note2t": "validity · ingenuity", "hero.note3b": "Lossless", "hero.note3t": "your words, unchanged",
     "sample.kicker": "Preview", "sample.h2": "A problem looks like this", "sample.lead": "Not a test with a fixed answer. One real dilemma with live trade-offs.", "sample.ctaSolve": "Solve this one yourself",
@@ -70,8 +70,8 @@ const T = {
     "how.s1t": "One hard problem", "how.s1d": "A card with domain, dilemma and question. No textbook exercises. A real dilemma with live trade-offs every time.",
     "how.s2t": "Answer raw", "how.s2d": "Rate your confidence (1-10) first, then write freely with no format. Your words are stored exactly, unchanged.",
     "how.s3t": "Blunt grading", "how.s3d": "Engineering validity and breakthrough ingenuity as scores, the fatal flaw in one line. No flattery. Then the next problem.",
-    "dom.kicker": "Domains", "dom.h2": "Pick the field you want", "dom.lead": "For now, fusion-engineering problems come mixed. Soon you'll pick problems by domain.", "dom.note": "* Domain selection is in preparation. Fields open gradually after question quality is validated.",
-    "dom.all": "Fusion (all)", "dom.d1": "Robotics / Control", "dom.d2": "Fluids · Heat · Energy", "dom.d3": "Signal / Embedded", "dom.d4": "Materials · Structures", "dom.d5": "Battery / Power", "dom.now": "Solve now", "dom.soon": "Soon",
+    "dom.kicker": "Domains", "dom.h2": "Pick the field you want", "dom.lead": "Engineering and philosophy, each broken into fields you can jump straight into.",
+    "dom.engHead": "🔧 Engineering fields", "dom.philHead": "🤔 Philosophy branches",
     "phil.kicker": "Why this way", "phil.h2": "Unpolished reasoning<br>is the costliest data", "phil.lead": "More than a clean final answer, the process of fumbling toward a path is real engineering intelligence.",
     "phil.i1t": "Lossless capture", "phil.i1d": "Your answer is stored as-is, before any grading or normalization. Preserved losslessly so it can serve any later use.",
     "phil.i2t": "Zero flattery", "phil.i2d": "No \"nice try\" here. Validity and ingenuity as numbers, and the single most fatal weakness called out head-on.",
@@ -121,22 +121,56 @@ on("#lang-toggle button", "click", (e) => {
   applyLang();
 });
 
-// ── domains (목업: 전체만 활성, 나머지 준비중) ──────────────────
-function renderDomains() {
-  const grid = $("domain-grid");
+// ── domains (실제 데이터 기반, 카테고리별 세부분야 — 토큰 없이 도메인 문자열 키워드로 분류) ──
+const DOMAIN_GROUP_LABELS = {
+  engineering: {
+    space_air: ["우주·항공", "Aerospace & Space"],
+    medical: ["의료·바이오공학", "Medical & Bio"],
+    energy: ["에너지·전력", "Energy & Power"],
+    semiconductor: ["반도체·정밀계측", "Semiconductor & Precision"],
+    robotics: ["로보틱스·제어·임베디드", "Robotics, Control & Embedded"],
+    materials: ["재료·제조·구조", "Materials & Structures"],
+    fluids_civil: ["열유체·화공·토목", "Thermal/Fluids & Civil"],
+  },
+  philosophy: {
+    mind_identity: ["마음·정체성·인식론", "Mind, Identity & Epistemology"],
+    life_ethics: ["생명·응용윤리", "Life & Applied Ethics"],
+    politics_society: ["정치·사회철학", "Politics & Society"],
+    tech_aesthetics: ["기술·미학·가치론", "Technology, Aesthetics & Value"],
+  },
+};
+function domainGroupLabel(category, group) {
+  const entry = (DOMAIN_GROUP_LABELS[category] || {})[group];
+  if (!entry) return group;
+  return entry[LANG === "en" ? 1 : 0];
+}
+
+function enterDomainGroup(category, group) {
+  state.category = category;
+  state.domainGroup = group;
+  state.user = null;
+  showApp();
+}
+
+function buildDomainGrid(gridId, category) {
+  const grid = $(gridId);
   if (!grid) return;
-  const items = [
-    { key: "dom.all", now: true },
-    { key: "dom.d1" }, { key: "dom.d2" }, { key: "dom.d3" }, { key: "dom.d4" }, { key: "dom.d5" },
-  ];
+  const list = state.questionsByCategory[category] || [];
+  const counts = {};
+  list.forEach((q) => { const g = q.domain_group || ""; if (g) counts[g] = (counts[g] || 0) + 1; });
   grid.innerHTML = "";
-  items.forEach((it) => {
-    const el = document.createElement(it.now ? "button" : "div");
-    el.className = "domain-chip " + (it.now ? "active-now" : "soon");
-    el.innerHTML = `<span>${tr(it.key)}</span><span class="soon-tag">${it.now ? tr("dom.now") : tr("dom.soon")}</span>`;
-    if (it.now) el.addEventListener("click", openModal);
+  Object.keys(counts).sort((a, b) => counts[b] - counts[a]).forEach((g) => {
+    const el = document.createElement("button");
+    el.className = "domain-chip active-now";
+    el.innerHTML = `<span>${domainGroupLabel(category, g)}</span><span class="soon-tag">${counts[g]}</span>`;
+    el.addEventListener("click", () => enterDomainGroup(category, g));
     grid.appendChild(el);
   });
+}
+
+function renderDomains() {
+  buildDomainGrid("domain-grid-eng", "engineering");
+  buildDomainGrid("domain-grid-phil", "philosophy");
 }
 
 // ── view switching ─────────────────────────────────────────────
@@ -145,7 +179,9 @@ const appView = $("app-view");
 function showApp() {
   landing.classList.add("hidden");
   appView.classList.remove("hidden");
-  state.questions = state.questionsByCategory[state.category] || SAMPLE;
+  const list = state.questionsByCategory[state.category] || SAMPLE;
+  state.questions = state.domainGroup ? list.filter((q) => (q.domain_group || "") === state.domainGroup) : list;
+  if (!state.questions.length) state.questions = list; // 필터 결과가 비면 안전하게 전체로 폴백
   state.idx = 0;
   window.scrollTo(0, 0);
   render();
@@ -162,6 +198,7 @@ modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); }
 on("[data-demo]", "click", (e) => {
   state.user = null;
   state.category = e.currentTarget.dataset.category || state.category || "engineering";
+  state.domainGroup = null;
   showApp();
 });
 on("[data-go-home]", "click", (e) => { e.preventDefault(); showLanding(); });
@@ -204,7 +241,7 @@ $("signout").addEventListener("click", async () => {
 
 // ── quiz state ─────────────────────────────────────────────────
 const state = { idx: 0, conf: 0, streak: 0, user: null, questions: [], questionsByCategory: {},
-  category: "engineering", freeUsed: 0, pendingName: null };
+  category: "engineering", domainGroup: null, freeUsed: 0, pendingName: null };
 
 function setUserFromSession(session) {
   const u = session?.user;
@@ -239,7 +276,8 @@ const SAMPLE = [
     cards_en: ["Adding the correction directly to the stresses easily breaks realizability", "Constraining the correction to a coefficient (eddy-viscosity) reduces divergence risk",
       "Network output on out-of-distribution geometries is extrapolation, hence untrustworthy", "Tight per-timestep coupling with the solver is unstable; loose/post-hoc coupling is more stable",
       "A physical prior (e.g. anisotropy invariants) can constrain the network's output space", "Regions of Reynolds number not covered by LES training data need a fallback that disables correction",
-      "Clipping the correction magnitude prevents divergence but also weakens the correction", "An ensemble can estimate uncertainty and damp correction where uncertainty is high"] },
+      "Clipping the correction magnitude prevents divergence but also weakens the correction", "An ensemble can estimate uncertainty and damp correction where uncertainty is high"],
+    domain_group: "fluids_civil" },
   { domain: "사족보행 로봇 / Sim-to-Real 강화학습", difficulty: "extreme",
     dilemma: "MuJoCo에서 PPO로 학습한 보행 정책이 시뮬에선 거의 완벽한데, 실제 액추에이터의 기어 백래시·토크 포화·8ms 통신지연이 겹치면 접촉 타이밍이 어긋나 비틀거린다. 도메인 랜덤화를 넓히면 강인해지지만 평균 보행속도가 급락하고, 실하드웨어 롤아웃은 마모로 50 에피소드만 허용된다.",
     question: "강인성과 평균성능을 동시에 살리려면 랜덤화 '분포 자체'를 어떻게 설계·스케줄링하고, 그 50 에피소드를 어디에 쓰겠는가?",
@@ -255,7 +293,8 @@ const SAMPLE = [
     cards_en: ["Widening the randomization range makes the policy conservative on average, dropping speed", "A curriculum (gradually expanding the range) can aid convergence while preserving final robustness",
       "Spending the 50 episodes on validation (measuring the sim-to-real gap) rather than training yields more information", "Communication delay can be emulated in simulation via action delay compensation",
       "Backlash and torque saturation only produce a real randomization effect if the actuator model is added to the simulator", "Real-hardware data can be used to post-hoc correct the simulator's parameter distribution (system identification)",
-      "Average performance and robustness are fundamentally a trade-off — maximizing both is a Pareto-frontier problem", "Spending episodes on policy fine-tuning risks non-recoverable asset loss on failure"] },
+      "Average performance and robustness are fundamentally a trade-off — maximizing both is a Pareto-frontier problem", "Spending episodes on policy fine-tuning risks non-recoverable asset loss on failure"],
+    domain_group: "robotics" },
 ];
 
 const SAMPLE_PHIL = [
@@ -274,7 +313,8 @@ const SAMPLE_PHIL = [
     cards_en: ["Counting only outcomes, 5 survivors beats 1 survivor arithmetically", "A widespread intuition holds that action and inaction carry different weights of moral responsibility",
       "The moment you pull the lever, that 1 person is treated as a mere means (a Kantian objection)", "It's hard to say doing nothing carries no responsibility as a bystander to 5 deaths",
       "The intuition flips sharply under small variations (e.g. pushing a large man) — is the intuition itself trustworthy?", "Legal responsibility and moral responsibility can diverge here",
-      "Structurally there is no 'opt out' — you are already implicated in this situation", "A morality that only counts numbers has been criticized for reducing individual dignity to a calculation"] },
+      "Structurally there is no 'opt out' — you are already implicated in this situation", "A morality that only counts numbers has been criticized for reducing individual dignity to a calculation"],
+    domain_group: "life_ethics" },
   { domain: "가치론 · 경험기계와 진짜 행복", difficulty: "hard",
     dilemma: "당신을 평생 완벽한 가상현실(경험기계)에 연결하면, 원하는 모든 성취·사랑·행복을 실제처럼 느끼며 살 수 있다. 기계 안에 있다는 사실 자체는 절대 알 수 없고, 주관적 경험의 질은 현실과 완전히 동일하거나 더 낫다.",
     question: "당신은 접속하겠는가? 접속을 거부한다면, 그 이유는 '경험의 질' 너머의 무엇인가?",
@@ -290,7 +330,8 @@ const SAMPLE_PHIL = [
     cards_en: ["Under hedonism there is no reason to refuse — quality of experience is all that matters", "Many refuse intuitively — which may be evidence that something beyond pleasure (authenticity, achievement) has value",
       "Some hold that 'actually having achieved it' adds value independent of the experience itself", "The refusal intuition may just be loss-aversion about reality, not a rational ground",
       "Inside the machine you remain 'someone' — one could object that identity doesn't depend on the source of experience", "It's hard to prove 'real' relationships with others are intrinsically more valuable than ones inside the machine",
-      "If our perception is already a simulation constructed by the brain, the line between the experience machine and reality is blurrier than it seems", "Even those who refuse routinely pursue comfort and entertainment (small experience machines) in daily life"] },
+      "If our perception is already a simulation constructed by the brain, the line between the experience machine and reality is blurrier than it seems", "Even those who refuse routinely pursue comfort and entertainment (small experience machines) in daily life"],
+    domain_group: "tech_aesthetics" },
 ];
 
 async function loadQuestions() {
@@ -304,7 +345,7 @@ async function loadQuestions() {
         // 셔플(매번 같은 순서 방지)
         const arr = data.map((q) => ({ domain: q.domain, difficulty: q.difficulty, dilemma: q.dilemma, question: q.question, gloss: q.gloss || [], qid: q.qid,
           domain_en: q.domain_en, dilemma_en: q.dilemma_en, question_en: q.question_en, gloss_en: q.gloss_en,
-          cards: q.cards || [], cards_en: q.cards_en || [] }));
+          cards: q.cards || [], cards_en: q.cards_en || [], domain_group: q.domain_group || "" }));
         for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
         state.questionsByCategory[cat] = arr;
       }
@@ -486,4 +527,5 @@ document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 buildScale();
 applyLang();
 await loadQuestions();
+renderDomains();
 if (state.user) showApp();
