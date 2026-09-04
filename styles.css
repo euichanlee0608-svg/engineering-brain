@@ -137,6 +137,17 @@ img{max-width:100%;display:block}
 .hero-copy .display em{font-style:normal; color:var(--accent)}
 .hero-copy .lead{margin:1.4rem 0 0; max-width:34ch}
 .hero-cta{display:flex; gap:.75rem; margin-top:2rem; flex-wrap:wrap}
+/* 맛보기 버튼이 실채점처럼 보이지 않도록, 누르기 전에 알린다 */
+.demo-note{
+  margin:.8rem 0 0; font-size:.83rem; line-height:1.6; color:var(--ink-3);
+  max-width:34rem; word-break:keep-all; overflow-wrap:break-word;
+}
+.demo-note .linkish{
+  font:inherit; font-weight:650; background:none; border:0; padding:0;
+  color:var(--accent); cursor:pointer; text-decoration:underline;
+  text-underline-offset:3px; white-space:nowrap;
+}
+.demo-note .linkish:hover{opacity:.78}
 .hero-note{margin-top:1.4rem; font-size:.86rem; color:var(--ink-3); display:flex; gap:1.2rem; flex-wrap:wrap}
 .hero-note b{color:var(--ink-2); font-weight:650}
 @media (max-width:860px){
