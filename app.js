@@ -46,7 +46,7 @@ const T = {
     "cta.h2": "한 문제면 감이 온다", "cta.lead": "이름만 입력하면 3문제까지 무료로 채점받을 수 있다. 더 풀고 데이터를 남기려면 로그인.", "cta.start": "지금 시작하기",
     "foot.copy": "© 2026 Engineering Brain · 융합공학 추론 데이터셋 프로젝트",
     "app.exit": "나가기",
-    "card.confidence": "먼저, 얼마나 아는가", "card.confhint": "1 = 감 없음 · 10 = 완전 자신", "card.answer": "내 답 · 양식 없음, 날것 그대로", "card.placeholder": "물리적 인과를 붙잡고 우회로를 설계해봐…", "card.placeholder.phil": "당신의 입장을 정하고, 왜 그런지 논증해봐…", "card.submit": "제출하고 채점받기", "card.skip": "건너뛰기", "card.saved": "✓ 답변 저장됨 (원문 무손실)", "card.grading": "채점 중…",
+    "card.confidence": "먼저, 얼마나 아는가", "card.confhint": "1 = 감 없음 · 10 = 완전 자신", "card.answer": "내 답 · 양식 없음, 날것 그대로", "card.placeholder": "물리적 인과를 붙잡고 우회로를 설계해봐…", "card.placeholder.phil": "당신의 입장을 정하고, 왜 그런지 논증해봐…", "card.submit": "제출하고 채점받기", "card.skip": "건너뛰기", "card.saved": "✓ 답변 저장됨 (원문 무손실)", "card.grading": "채점 중…", "err.regrade": "다시 채점받기", "err.gradeBusy": "채점 서버가 지금 응답하지 않습니다. 잠시 뒤 다시 채점받아 주세요.", "err.gradeNet": "인터넷 연결이 끊겨 채점하지 못했습니다. 연결을 확인하고 다시 채점받아 주세요.", "err.gradeSaved": " 답변은 저장돼 있습니다.", "err.authNet": "로그인 서버에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.", "err.authRate": "요청이 잦아 잠시 막혔습니다. 1분쯤 뒤 다시 시도해 주세요.", "err.authOther": "잠시 뒤 다시 시도해 주세요.",
     "fb.title": "즉석 채점", "fb.tag": "아첨 0%", "fb.validity": "공학적 타당성", "fb.validity.phil": "논증적 정합성", "fb.ingenuity": "우회 돌파력", "fb.ingenuity.phil": "통찰의 참신함", "fb.critique": "치명적 한계 · ", "fb.hint": "힌트 · ", "fb.retry": "다시 답변하기", "fb.next": "다음 질문으로",
     "limit.title": "무료 3문제를 다 풀었어요", "limit.body": "로그인하면 계속 풀 수 있고, 답변과 채점이 당신의 데이터셋으로 저장됩니다.", "limit.cta": "로그인하고 계속하기",
     "badge.demo": "데모 모드 · 채점은 샘플입니다",
@@ -83,7 +83,7 @@ const T = {
     "cta.h2": "One problem and you'll get it", "cta.lead": "Enter just your name for 3 free graded problems. Sign in to keep going and save your data.", "cta.start": "Start now",
     "foot.copy": "© 2026 Engineering Brain · Fusion-engineering reasoning dataset",
     "app.exit": "Exit",
-    "card.confidence": "First, how well do you know this", "card.confhint": "1 = no clue · 10 = fully sure", "card.answer": "Your answer · no format, raw", "card.placeholder": "Grab the physical causality and design a workaround…", "card.placeholder.phil": "Take a stance, then argue why…", "card.submit": "Submit and get graded", "card.skip": "Skip", "card.saved": "✓ Answer saved (lossless)", "card.grading": "Grading…",
+    "card.confidence": "First, how well do you know this", "card.confhint": "1 = no clue · 10 = fully sure", "card.answer": "Your answer · no format, raw", "card.placeholder": "Grab the physical causality and design a workaround…", "card.placeholder.phil": "Take a stance, then argue why…", "card.submit": "Submit and get graded", "card.skip": "Skip", "card.saved": "✓ Answer saved (lossless)", "card.grading": "Grading…", "err.regrade": "Grade again", "err.gradeBusy": "The grading server isn't responding right now. Please try grading again in a moment.", "err.gradeNet": "The connection dropped, so grading didn't happen. Check your connection and grade again.", "err.gradeSaved": " Your answer is saved.", "err.authNet": "Couldn't reach the sign-in server. Check your connection and try again.", "err.authRate": "Too many attempts for now. Try again in about a minute.", "err.authOther": "Please try again in a moment.",
     "fb.title": "Instant grading", "fb.tag": "0% flattery", "fb.validity": "Engineering validity", "fb.validity.phil": "Argumentative rigor", "fb.ingenuity": "Breakthrough ingenuity", "fb.ingenuity.phil": "Novel insight", "fb.critique": "Fatal flaw · ", "fb.hint": "Hint · ", "fb.retry": "Try again", "fb.next": "Next problem",
     "limit.title": "You've used your 3 free problems", "limit.body": "Sign in to keep going, and your answers and grades are saved as your dataset.", "limit.cta": "Sign in to continue",
     "badge.demo": "Demo mode · grading is sample",
@@ -207,6 +207,14 @@ on("[data-demo]", "click", (e) => {
 });
 on("[data-go-home]", "click", (e) => { e.preventDefault(); showLanding(); });
 
+// 실패를 사람이 읽는 말로(_library/rules/ux-error-tell-user.md). 원문은 콘솔에만.
+function authMsg(error) {
+  const m = String(error?.message || error || "");
+  console.warn("[eng_quiz] auth", m);
+  if (/fetch|network|load failed/i.test(m) || navigator.onLine === false) return tr("err.authNet");
+  if (/rate limit|too many/i.test(m)) return tr("err.authRate");
+  return tr("err.authOther");
+}
 function note(msg, kind) { const n = $("auth-note"); n.textContent = msg; n.className = "note " + kind; }
 
 // 이름만 입력 → 익명 로그인(3문제 무료 실채점)
@@ -216,7 +224,7 @@ $("free-btn").addEventListener("click", async () => {
   $("free-btn").disabled = true;
   const { error } = await supabase.auth.signInAnonymously({ options: { data: { name } } });
   $("free-btn").disabled = false;
-  if (error) return note((LANG === "en" ? "Anonymous start failed: " : "익명 시작 실패: ") + error.message, "err");
+  if (error) return note((LANG === "en" ? "Anonymous start failed. " : "익명 시작 실패. ") + authMsg(error), "err");
   // onAuthStateChange 가 입장 처리. 이름 보강.
   state.pendingName = name;
 });
@@ -228,14 +236,14 @@ $("magic-btn").addEventListener("click", async () => {
   $("magic-btn").disabled = true;
   const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } });
   $("magic-btn").disabled = false;
-  if (error) return note((LANG === "en" ? "Send failed: " : "전송 실패: ") + error.message, "err");
+  if (error) return note((LANG === "en" ? "Send failed. " : "전송 실패. ") + authMsg(error), "err");
   note(LANG === "en" ? "✓ Sign-in link sent. Check your inbox." : "✓ 이메일로 로그인 링크를 보냈습니다. 메일함을 확인하세요.", "ok");
 });
 
 $("google-btn").addEventListener("click", async () => {
   if (!LIVE) { state.user = { email: "demo@google", name: "Demo" }; closeModal(); showApp(); return; }
   const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.href } });
-  if (error) note((LANG === "en" ? "Google sign-in failed: " : "Google 로그인 실패: ") + error.message, "err");
+  if (error) note((LANG === "en" ? "Google sign-in failed. " : "Google 로그인 실패. ") + authMsg(error), "err");
 });
 
 $("signout").addEventListener("click", async () => {
@@ -400,6 +408,7 @@ function render() {
   $("limit-box").classList.remove("show");
   $("saved").classList.remove("show");
   $("grading").classList.remove("show");
+  $("grade-err").classList.remove("show");
   $("submit").disabled = true;
   $("submit").style.display = ""; $("skip").style.display = "";
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -445,20 +454,33 @@ function mockGrade(answer) {
   return { v, g, c: crits[len % crits.length], h: hints[len % hints.length] };
 }
 
+// 실채점 대상(로그인·익명 + LIVE)이 실패하면 {fail} 을 돌려준다 — 샘플 점수로 덮으면 사용자는
+// 가짜 채점을 진짜로 믿는다(2026-10-25 점검에서 발견). 샘플은 데모 모드(실채점 대상 아님)에서만.
+const GRADE_MS = 30000;
 async function gradeAnswer(q, answer, conf) {
-  if (LIVE && CFG.LIVE_GRADING && supabase && state.user) {
-    try {
-      const { data, error } = await supabase.functions.invoke("grade", {
-        body: { prompt: q.question, dilemma: q.dilemma, domain: q.domain, answer, confidence: conf, lang: LANG, category: state.category },
-      });
-      if (error) {
-        try { const e = await error.context.json(); if (e.error === "free_limit") return { limit: true }; } catch (_) {}
-        return mockGrade(answer); // 그 외 오류 → mock 폴백
-      }
-      if (data && typeof data.validity === "number") return { v: data.validity, g: data.ingenuity, c: data.critique, h: data.hint };
-    } catch (_) { /* 폴백 */ }
+  if (!(LIVE && CFG.LIVE_GRADING && supabase && state.user)) return mockGrade(answer);
+  try {
+    const call = supabase.functions.invoke("grade", {
+      body: { prompt: q.question, dilemma: q.dilemma, domain: q.domain, answer, confidence: conf, lang: LANG, category: state.category },
+    });
+    const late = new Promise((r) => setTimeout(() => r({ timeout: true }), GRADE_MS));
+    const res = await Promise.race([call, late]);
+    if (res.timeout) { console.warn("[eng_quiz] grade timeout"); return { fail: "busy" }; }
+    const { data, error } = res;
+    if (error) {
+      let code = "";
+      try { code = (await error.context.json()).error || ""; } catch (_) {}
+      if (code === "free_limit") return { limit: true };
+      console.warn("[eng_quiz] grade", code || error.message);
+      return { fail: /fetch|network/i.test(String(error.message)) || navigator.onLine === false ? "net" : "busy" };
+    }
+    if (data && typeof data.validity === "number") return { v: data.validity, g: data.ingenuity, c: data.critique, h: data.hint };
+    console.warn("[eng_quiz] grade: 형식이 다른 응답", data);
+    return { fail: "busy" };
+  } catch (e) {
+    console.warn("[eng_quiz] grade", e);
+    return { fail: navigator.onLine === false ? "net" : "busy" };
   }
-  return mockGrade(answer);
 }
 
 async function saveAnswer(q, answer, conf) {
@@ -491,10 +513,21 @@ $("submit").addEventListener("click", async () => {
 
   const contribId = await saveAnswer(q, answer, state.conf);
   if (contribId) $("saved").classList.add("show");  // 실제 저장된 경우만(데모는 표시 안 함)
-  $("grading").classList.add("show");               // 채점 중 표시(Gemini 1~3초)
+  await runGrade(q, answer, contribId);
+});
 
+async function runGrade(q, answer, contribId) {
+  $("grade-err").classList.remove("show");
+  $("grading").classList.add("show");               // 채점 중 표시(Gemini 1~3초)
   const fb = await gradeAnswer(q, answer, state.conf);
   $("grading").classList.remove("show");
+  if (fb && fb.fail) {                              // 실패 — 무엇이 안 됐고 지금 뭘 할 수 있나
+    $("grade-err-msg").textContent = tr(fb.fail === "net" ? "err.gradeNet" : "err.gradeBusy") + (contribId ? tr("err.gradeSaved") : "");
+    $("regrade").onclick = () => runGrade(q, answer, contribId);
+    $("grade-err").classList.add("show");
+    $("skip").style.display = "";                   // 기다리지 않고 다음 문제로 넘어갈 길도 열어 둔다
+    return;
+  }
   if (fb && fb.limit) {                       // 익명 무료 3회 초과
     state.freeUsed = 3;
     $("limit-box").classList.add("show");
@@ -512,7 +545,7 @@ $("submit").addEventListener("click", async () => {
   $("feedback").classList.add("show");
   setTimeout(() => { $("v-bar").style.width = fb.v + "%"; $("g-bar").style.width = fb.g + "%"; animateNum("v-num", fb.v); animateNum("g-num", fb.g); }, 60);
   if (!state.user?.anon) { state.streak++; $("streak").textContent = LANG === "en" ? `Streak ${state.streak}` : `연속 ${state.streak}`; }
-});
+}
 
 $("next").addEventListener("click", () => { state.idx++; render(); });
 $("skip").addEventListener("click", () => { state.idx++; render(); });

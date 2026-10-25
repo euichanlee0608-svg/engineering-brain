@@ -9,7 +9,7 @@
 <meta property="og:description" content="융합공학 난제로 당신의 사고를 시험하라.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2315683f'/><text x='16' y='22' font-size='17' font-family='sans-serif' font-weight='800' fill='white' text-anchor='middle'>E</text></svg>">
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./styles.css?v=2">
 </head>
 <body>
 
@@ -246,6 +246,7 @@
         </div>
         <div class="saved" id="saved" data-i18n="card.saved">✓ 답변 저장됨 (원문 무손실)</div>
         <div class="grading" id="grading"><span class="dot-pulse"></span><span data-i18n="card.grading">채점 중…</span></div>
+        <div class="grade-err" id="grade-err" role="alert"><p id="grade-err-msg"></p><button class="btn btn-ghost" id="regrade" type="button" data-i18n="err.regrade">다시 채점받기</button></div>
 
         <div class="feedback" id="feedback">
           <div class="fb-head">
@@ -312,7 +313,7 @@
 </div>
 
 <script src="./config.js"></script>
-<script type="module" src="./app.js"></script>
+<script type="module" src="./app.js?v=2"></script>
 <script>
 /* 방문 알림 비콘 — GAS→텔레그램 릴레이 (메모리 reference-website-visit-beacon-pattern, ~/portfolio와 동일 GAS).
    ref에 'engbrain|' 접두사로 사이트 구분. ?owner=1 접속 시 이 브라우저는 이후 알림 제외(github.io 오리진 공유). */
