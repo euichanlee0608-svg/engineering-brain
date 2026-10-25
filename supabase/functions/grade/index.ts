@@ -18,7 +18,7 @@ const FREE_LIMIT = 3; // 익명(이름만) 사용자 무료 실채점 횟수
 async function loadSecrets() {
   const url = Deno.env.get("SUPABASE_URL");
   const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const keys = "gemini_keys,gemini_model,grade_sys,grade_sys_philosophy,telegram_notify_token,telegram_owner_chat";
+  const keys = "gemini_keys,gemini_model,grade_sys,grade_sys_philosophy,telegram_notify_token,telegram_owner_chat,webapp_notify_off";
   const r = await fetch(`${url}/rest/v1/app_secrets?select=key,value&key=in.(${keys})`,
     { headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
   const rows = await r.json();
@@ -29,7 +29,9 @@ async function loadSecrets() {
     model: m["gemini_model"] || "gemini-flash-latest",
     sys: m["grade_sys"] || "",
     sysPhilosophy: m["grade_sys_philosophy"] || "",
-    tgToken: m["telegram_notify_token"] || "",
+    // 웹앱 알림 킬스위치(COT봇 /webapp_kill) — 꺼진 앱이면 토큰을 비워 보내지 않는다. 단일 출처 app_secrets.webapp_notify_off
+    tgToken: (m["webapp_notify_off"] || "").split(",").map((x) => x.trim()).some((x) => x === "*" || x === "engbrain")
+      ? "" : (m["telegram_notify_token"] || ""),
     tgChat: m["telegram_owner_chat"] || "",
   };
 }
